@@ -832,6 +832,23 @@ function getUnit(mat) {
   if (matLower.includes("gasket") || matLower.includes("megalug") || matLower.includes("hydrant") || matLower.includes("valve") || matLower.includes("box")) return "pcs";
   return "pcs"; // default
 }
+function saveToLocal() {
+  localStorage.setItem("wmEstimatorData", JSON.stringify(results));
+  alert("Estimate saved in your browser!");
+}
+
+function loadFromLocal() {
+  const data = localStorage.getItem("wmEstimatorData");
+  if (data) {
+    results.length = 0;
+    results.push(...JSON.parse(data));
+    renderResults();
+    updateLivePreview();
+    alert("Estimate loaded!");
+  } else {
+    alert("No saved estimate found.");
+  }
+}
 
 
 
@@ -849,6 +866,11 @@ function getUnit(mat) {
 
   <button onclick="downloadExcel()">Download Excel</button>
   <button onclick="clearAll()">Clear All</button>
+<button onclick="saveToLocal()">💾 Save My Estimate</button>
+<button onclick="loadFromLocal()">📂 Load My Estimate</button>
+<button onclick="localStorage.removeItem('wmEstimatorData'); alert('Saved data cleared!');">
+🗑️ Clear Saved Data
+</button>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script>
