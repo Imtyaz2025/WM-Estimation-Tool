@@ -1,0 +1,2092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WM Material Estimator</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #d942092e; /* light blue background */
+  color: #333;
+  padding: 20px;
+}
+
+h1, h1 {
+  font-size: 40px;
+  font-weight: 900;
+  text-align: center;
+  color: Black;
+  margin-bottom: 30px;
+}
+h2 {
+  font-size: 25px;
+  font-weight: 800;
+  color: #000;
+  margin-top: 0;
+}
+
+/* 3. Label text (e.g., Select WM Item, Quantity) */
+label {
+  font-size: 16px;
+  font-weight: 700;
+  color: Black;
+  margin-top: 12px;
+}
+
+/* 4. Improved dropdown look */
+select {
+  font-size: 20px;
+  font-weight: 600;
+  height: 40px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 5px solid #bbb;
+  background-color: #ffffff;  /* neutral white */
+  color: #333;
+}
+
+select:focus {
+  border-color: #007acc;
+  background-color: #f0f8ff;  /* very light blue */
+  outline: none;
+}
+
+/* Dropdown items (options) */
+select option {
+  font-size: 12px;
+  font-weight: normal;  /* makes it less harsh */
+}
+
+/* Input fields */
+input {
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px;
+}
+
+/* Buttons */
+button {
+  font-size: 1px;
+  font-weight: bold;
+}
+
+.section {
+  background-color: #ffffff;
+  border: 6px solid green;
+  padding: 30px;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+label {
+font-weight: bold;
+  margin-top: 10px;
+  display: block;
+  font-weight: 600;
+  font-size: 16px;
+
+}
+
+input, select {
+  font-weight: bold;
+  font-size: 15px;          /* Increase font size */
+  height: 48px;             /* Increase dropdown height */
+  padding: 10px;
+  border-radius: 6px;
+  border: 2px solid;
+  background-color: #f9fdff;
+  box-sizing: border-box;
+  transition: border 0.2s ease, background-color 0.2s ease;
+}
+
+select:focus {
+  border-color: #007acc;
+  background-color: #eaf6ff;
+  outline: none;
+}
+
+select option {
+  font-weight: bold;
+  font-size: 16px;          /* Ensure options are also larger */
+}
+
+button {
+  background-color: #007acc;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+  background-color: #005a99;
+  box-shadow: 0 2px 6px rgba(0, 90, 153, 0.2);
+}
+
+.output {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #e1f5fe;
+  border: 1px solid #81d4fa;
+  border-radius: 10px;
+}
+
+.entry-title {
+  font-weight: bold;
+  margin-top: 16px;
+  color: #003e73;
+select {
+  font-weight: bold;
+}
+}
+
+ul {
+  padding-left: 20px;
+}
+</style>
+</head>
+<body>
+  <h1>WM Material Estimator Tool</h1>
+<div class="section">
+  <h2>📋 Project Details</h2>
+
+  <label for="projectName">Project Name</label>
+  <input type="text" id="projectName" placeholder="Enter project name">
+
+  <label for="estimatorName">Estimator Name</label>
+  <input type="text" id="estimatorName" placeholder="Enter estimator name">
+
+  <label for="estimateDate">Estimate Date</label>
+  <input type="date" id="estimateDate">
+<button onclick="clearProjectDetails()">Clear</button>
+
+</div>
+
+  <div class="section">
+    <h2>1. 🚰 WM Items</h2>
+    <label for="wmCategory">WM Item Category</label>
+<select id="wmCategory" onchange="filterWMByCategory()">
+  <option value="">-- Select Category --</option>
+  <option value="Pipes">Pipes</option>
+  <option value="Gate Valves">Gate Valves</option>
+  <option value="Hydrants">Hydrants</option>
+</select>
+
+<label for="wmItem">Select WM Item</label>
+<select id="wmItem"></select>
+    <label for="wmQty">Quantity</label>
+    <input type="number" id="wmQty" placeholder="Enter quantity">
+    <button onclick="addItem('wm')">Add WM Item</button>
+<button onclick="clearWMInputs()">Clear</button>
+  </div>
+
+  <div class="section">
+  <h2>2. 🔩 Fittings</h2>
+
+  <label for="fittingCategory">Fitting Category</label>
+  <select id="fittingCategory" onchange="filterFittingsByCategory()">
+    <option value="">-- Select Category --</option>
+    <option value="Bends">Bends</option>
+    <option value="Tees">Tees</option>
+    <option value="Reducers">Reducers</option>
+    <option value="Crosses">Crosses</option>
+    <option value="Solid Sleeves">Solid Sleeves</option>
+<option value="Caps">Caps</option>
+  <option value="Plugs">Plugs</option>
+  <option value="Stand Pipe">Stand Pipe</option>
+<option value="HDPE to DI Connections">HDPE to DI Connections</option>
+<option value="Omni Couplings">Omni Couplings</option>
+  </select>
+
+  <label for="fittingItem">Select Fitting</label>
+  <select id="fittingItem"></select>
+
+  <label for="fittingQty">Quantity</label>
+  <input type="number" id="fittingQty" placeholder="Enter quantity">
+  
+  <button onclick="addItem('fitting')">Add Fitting</button>
+<button onclick="clearFittingInputs()">Clear</button>
+</div>
+
+  <div class="section">
+   <div class="section">
+  <h2>3. 🚿 Service Transfers</h2>
+
+  <label for="serviceItem">Select Service Type</label>
+  <select id="serviceItem">
+    <option value="">-- Select Service --</option>
+    <option value="1 inch Service - Long Side">1 inch Service - Long Side</option>
+    <option value="1 inch Service - Short Side">1 inch Service - Short Side</option>
+    <option value="2 inch Service - Long Side">2 inch Service - Long Side</option>
+    <option value="2 inch Service - Short Side">2 inch Service - Short Side</option>
+  </select>
+
+  <label for="serviceQty">Quantity</label>
+  <input type="number" id="serviceQty" placeholder="Enter quantity">
+
+  <!-- 👇 Paste this new line here -->
+  <label for="pipeLength">Pipe Length per Service (ft)</label>
+  <input type="number" id="pipeLength" placeholder="Enter copper pipe length per service">
+
+  <button onclick="addService()">Add Service</button>
+  <button onclick="clearServiceInputs()">Clear</button>
+</div>
+
+  <div class="section">
+    <h2>4. 🪨 Backfill Calculation</h2>
+    <label for="backfillType">Select Backfill Material</label>
+    <select id="backfillType">
+      <option value="All">All (Spoils, Class 2 Sand, Millings, 21AA)</option>
+      <option value="Spoils Quantity (CYD)">Spoils Quantity (CYD)</option>
+      <option value="Class 2 Sand Quantity (CYD)">Class 2 Sand Quantity (CYD)</option>
+      <option value="Millings Quantity (CYD)">Millings Quantity (CYD)</option>
+      <option value="21AA Quantity (CYD)">21AA Quantity (CYD)</option>
+    </select>
+    <label for="backfillPipeLength">Pipe Length (ft)</label>
+    <input type="number" id="backfillPipeLength" placeholder="Enter pipe length (ft)">
+    <label for="backfillPipeWidth">Trench Width (ft)</label>
+    <input type="number" id="backfillPipeWidth" placeholder="Enter trench width (ft)">
+    <label for="backfillPipeDepth">Trench Depth (ft)</label>
+    <input type="number" id="backfillPipeDepth" placeholder="Enter trench depth (ft)">
+    <button onclick="calculateBackfill()">Calculate Backfill Quantities</button>
+<button onclick="clearBackfillInputs()">Clear</button>
+  </div>
+
+
+  <div class="section">
+    <h2>5. 🧱 Other Materials</h2>
+    <button onclick="calculateOthers()">Calculate Thrust Blocks & Polywrap</button>
+  </div>
+<div class="section">
+  <h2>6. 🧪 Pressure Test & Chlorination</h2>
+
+  <label for="testPressure">Test Pressure (psi)</label>
+  <input type="number" id="testPressure" placeholder="Enter test pressure (default 150)">
+
+  <button onclick="calculateChlorination()">Calculate Chlorination & Leakage</button>
+</div>
+
+<div class="section">
+  <h2>7. 🛣️ Restoration Quantities</h2>
+  <label for="restorationType">Restoration Type</label>
+  <select id="restorationType">
+    <option value="Pavement Restoration">Pavement Restoration</option>
+    <option value="Sidewalk Restoration">Sidewalk Restoration</option>
+  </select>
+
+  <label for="materialType">Material</label>
+  <select id="materialType">
+    <option value="21AA">21AA</option>
+    <option value="Concrete">Concrete</option>
+    <option value="Dowels">Dowels</option>
+    <option value="Asphalt">Asphalt</option>
+    <option value="Cold Patch">Cold Patch</option>
+    <option value="Other">Other</option>
+  </select>
+
+  <label for="resLength">Length (ft)</label>
+  <input type="number" id="resLength" placeholder="Enter length (ft)">
+  
+  <label for="resBreadth">Breadth (ft) <small>(Not needed for Dowels)</small></label>
+  <input type="number" id="resBreadth" placeholder="Enter breadth (ft)">
+
+  <label for="resThickness">Thickness (inches) <small>(Not needed for Dowels)</small></label>
+  <input type="number" id="resThickness" placeholder="Enter thickness (inches)">
+
+  <button onclick="calculateSimpleRestoration()">Add Restoration Item</button>
+<button onclick="clearRestorationInputs()">Clear</button>
+</div>
+<div class="section" style="position: fixed; right: 20px; top: 100px; width: 280px; background: #fff8dc; border: 2px solid ; padding: 16px; border-radius: 10px; box-shadow: 2px 2px 6px rgba(0,0,0,0.1); max-height: 80vh; overflow-y: auto;">
+  <h2 style="font-size: 18px; color: black;">🧾 Your Selections</h2>
+  <div id="livePreview"></div>
+</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Project Schedule</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #eef6ff;
+      padding: 20px;
+      color: #333;
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    #scheduleTable {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    #scheduleTable th, #scheduleTable td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    #scheduleTable th {
+      background-color: #f0f8ff;
+    }
+
+    #scheduleTable input,
+    #scheduleTable select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 5px;
+      font-size: 14px;
+    }
+
+    #totalDaysDisplay {
+      font-weight: bold;
+      margin-top: 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    
+let teams = [];
+let workAssignments = [];
+let currentTeam = { name: '', crewList: [] };
+let equipmentSets = [];
+let currentEquipSet = { name: '', items: [] };
+let equipmentAssignments = [];
+
+function addToTeam() {
+  const desig = document.getElementById("crewDesignation").value;
+  const wage = parseFloat(document.getElementById("hourlyWage").value);
+  if (!desig || isNaN(wage)) return alert("Enter valid designation and wage");
+  currentTeam.crewList.push({ designation: desig, wage: wage });
+  document.getElementById("crewDesignation").value = "";
+  document.getElementById("hourlyWage").value = "";
+  renderTeamPreview();
+}
+
+function renderTeamPreview() {
+  const preview = document.getElementById("teamPreview");
+  let html = "<strong>Current Team:</strong><ul>";
+  currentTeam.crewList.forEach(c => {
+    html += `<li>${c.designation} - $${c.wage}/hr</li>`;
+  });
+  html += "</ul>";
+  preview.innerHTML = html;
+}
+
+function saveTeam() {
+  const name = document.getElementById("teamName").value.trim();
+  if (!name || currentTeam.crewList.length === 0) return alert("Add team name and crew");
+  teams.push({ name: name, crewList: currentTeam.crewList });
+  updateTeamDropdown();
+  currentTeam = { name: '', crewList: [] };
+  document.getElementById("teamName").value = "";
+  document.getElementById("teamPreview").innerHTML = "";
+}
+
+function updateTeamDropdown() {
+  const dropdown = document.getElementById("teamSelect");
+  dropdown.innerHTML = "";
+  teams.forEach((team, index) => {
+    const opt = document.createElement("option");
+    opt.value = index;
+    opt.textContent = team.name;
+    dropdown.appendChild(opt);
+  });
+}
+
+function assignWork() {
+  const desc = document.getElementById("workDesc").value;
+  const days = parseInt(document.getElementById("workDays").value);
+  const teamIndex = parseInt(document.getElementById("teamSelect").value);
+  if (!desc || isNaN(days) || isNaN(teamIndex)) return alert("Enter all fields");
+
+  const team = teams[teamIndex];
+  const dailyRate = team.crewList.reduce((sum, c) => sum + c.wage * 8, 0);
+  const total = dailyRate * days;
+
+  workAssignments.push({
+    desc: desc,
+    days: days,
+    teamName: team.name,
+    cost: total
+  });
+
+  updateWorkTable();
+  updateWorkDescAndDaysDropdown();
+
+  document.getElementById("workDesc").value = "";
+  document.getElementById("workDays").value = "";
+}
+
+function updateWorkTable() {
+  const table = document.getElementById("manpowerSummary");
+  table.innerHTML = `
+    <tr>
+      <th>S.No</th>
+      <th>Work Description</th>
+      <th>Days</th>
+      <th>Team</th>
+      <th>Total Cost ($)</th>
+    </tr>`;
+  workAssignments.forEach((item, i) => {
+    const row = table.insertRow();
+    row.insertCell(0).textContent = i + 1;
+    row.insertCell(1).textContent = item.desc;
+    row.insertCell(2).textContent = item.days;
+    row.insertCell(3).textContent = item.teamName;
+    row.insertCell(4).textContent = item.cost.toFixed(2);
+  });
+}
+
+function updateWorkDescAndDaysDropdown() {
+  const workDescSelect = document.getElementById("equipWorkDescSelect");
+  const workDaysSelect = document.getElementById("equipWorkDaysSelect");
+
+  workDescSelect.innerHTML = "";
+  workDaysSelect.innerHTML = "";
+
+  workAssignments.forEach((w, i) => {
+    const opt1 = document.createElement("option");
+    opt1.value = w.desc;
+    opt1.textContent = w.desc;
+    workDescSelect.appendChild(opt1);
+
+    const opt2 = document.createElement("option");
+    opt2.value = w.days;
+    opt2.textContent = `${w.days} Days`;
+    workDaysSelect.appendChild(opt2);
+  });
+
+  const addNewOpt1 = document.createElement("option");
+  addNewOpt1.value = "addNew";
+  addNewOpt1.textContent = "➕ Add New Work Description";
+  workDescSelect.appendChild(addNewOpt1);
+
+  const addNewOpt2 = document.createElement("option");
+  addNewOpt2.value = "addNew";
+  addNewOpt2.textContent = "➕ Add Custom No. of Days";
+  workDaysSelect.appendChild(addNewOpt2);
+}
+
+function handleEquipWorkChange() {
+  const val = document.getElementById("equipWorkDescSelect").value;
+  const input = document.getElementById("equipWorkDescManual");
+
+  if (val === "addNew") {
+    input.style.display = "inline-block";
+    document.getElementById("equipWorkDaysManual").style.display = "inline-block";
+    document.getElementById("equipWorkDaysSelect").value = "addNew";
+  } else {
+    input.style.display = "none";
+    document.getElementById("equipWorkDaysManual").style.display = "none";
+
+    const match = workAssignments.find(w => w.desc === val);
+    if (match) {
+      const daysDropdown = document.getElementById("equipWorkDaysSelect");
+      for (let i = 0; i < daysDropdown.options.length; i++) {
+        if (parseInt(daysDropdown.options[i].value) === match.days) {
+          daysDropdown.selectedIndex = i;
+          break;
+        }
+      }
+    }
+  }
+}
+
+function handleEquipDaysChange() {
+  const val = document.getElementById("equipWorkDaysSelect").value;
+  const input = document.getElementById("equipWorkDaysManual");
+  input.style.display = (val === "addNew") ? "inline-block" : "none";
+}
+
+function addEquipmentToSet() {
+  const name = document.getElementById("equipmentName").value.trim();
+  const cost = parseFloat(document.getElementById("equipmentCost").value);
+  if (!name || isNaN(cost)) {
+    alert("Please enter equipment name and valid cost.");
+    return;
+  }
+
+  currentEquipSet.items.push({ equipName: name, dailyCost: cost });
+  document.getElementById("equipmentName").value = "";
+  document.getElementById("equipmentCost").value = "";
+  renderEquipmentPreview();
+}
+
+function renderEquipmentPreview() {
+  const div = document.getElementById("equipmentPreview");
+  let html = "<strong>Current Equipment Set:</strong><ul>";
+  currentEquipSet.items.forEach(eq => {
+    html += `<li>${eq.equipName} - $${eq.dailyCost}/day</li>`;
+  });
+  html += "</ul>";
+  div.innerHTML = html;
+}
+
+function saveEquipmentSet() {
+  const setName = document.getElementById("equipmentSetName").value.trim();
+  if (!setName || currentEquipSet.items.length === 0) {
+    alert("Please enter set name and at least one equipment.");
+    return;
+  }
+
+  equipmentSets.push({
+    name: setName,
+    items: currentEquipSet.items
+  });
+
+  currentEquipSet = { name: '', items: [] };
+  document.getElementById("equipmentSetName").value = "";
+  document.getElementById("equipmentPreview").innerHTML = "";
+
+  updateEquipmentSetDropdown();
+}
+
+function updateEquipmentSetDropdown() {
+  const dropdown = document.getElementById("equipmentSetSelect");
+  dropdown.innerHTML = "";
+  equipmentSets.forEach((set, index) => {
+    const opt = document.createElement("option");
+    opt.value = index;
+    opt.textContent = set.name;
+    dropdown.appendChild(opt);
+  });
+}
+
+function assignEquipment() {
+  const workDescDropdown = document.getElementById("equipWorkDescSelect");
+  const workDaysDropdown = document.getElementById("equipWorkDaysSelect");
+  const manualDesc = document.getElementById("equipWorkDescManual").value;
+  const manualDays = parseInt(document.getElementById("equipWorkDaysManual").value);
+
+  const workDesc = (workDescDropdown.value === "addNew") ? manualDesc : workDescDropdown.value;
+  const days = (workDaysDropdown.value === "addNew") ? manualDays : parseInt(workDaysDropdown.value);
+
+  const setIndex = parseInt(document.getElementById("equipmentSetSelect").value);
+  if (!workDesc || isNaN(days) || isNaN(setIndex)) {
+    alert("Please complete all fields including custom values if selected.");
+    return;
+  }
+
+  const set = equipmentSets[setIndex];
+  const dailyCost = set.items.reduce((sum, eq) => sum + eq.dailyCost, 0);
+  const total = dailyCost * days;
+
+  equipmentAssignments.push({
+    desc: workDesc,
+    days,
+    setName: set.name,
+    total
+  });
+
+  updateEquipmentTable();
+  document.getElementById("equipWorkDescManual").value = "";
+  document.getElementById("equipWorkDaysManual").value = "";
+}
+
+function updateEquipmentTable() {
+  const table = document.getElementById("equipmentSummary");
+  table.innerHTML = `
+    <tr>
+      <th>S.No</th>
+      <th>Work Description</th>
+      <th>Days</th>
+      <th>Equipment Set</th>
+      <th>Total Cost ($)</th>
+    </tr>`;
+  equipmentAssignments.forEach((entry, i) => {
+    const row = table.insertRow();
+    row.insertCell(0).textContent = i + 1;
+    row.insertCell(1).textContent = entry.desc;
+    row.insertCell(2).textContent = entry.days;
+    row.insertCell(3).textContent = entry.setName;
+    row.insertCell(4).textContent = entry.total.toFixed(2);
+  });
+}
+const serviceEstimates = [];
+
+function addServiceEstimate() {
+  const type = document.getElementById('servicePriceType').value;
+  const qty = parseInt(document.getElementById('servicePriceQty').value);
+  const unitPrice = parseFloat(document.getElementById('serviceUnitPrice').value);
+
+  if (!type || isNaN(qty) || qty <= 0 || isNaN(unitPrice) || unitPrice <= 0) {
+    alert("Please fill all fields correctly.");
+    return;
+  }
+
+  const total = qty * unitPrice;
+
+  serviceEstimates.push({ type, qty, unitPrice, total });
+  renderServiceEstimateSummary();
+  clearServiceEstimateInputs();
+}
+
+function renderServiceEstimateSummary() {
+  const table = document.getElementById("serviceEstimateTable");
+  table.innerHTML = `
+    <tr>
+      <th>S.No</th>
+      <th>Service Type</th>
+      <th>Quantity</th>
+      <th>Unit Price ($)</th>
+      <th>Total Price ($)</th>
+    </tr>`;
+
+  let grandTotal = 0;
+  serviceEstimates.forEach((s, i) => {
+    const row = table.insertRow();
+    row.insertCell(0).textContent = i + 1;
+    row.insertCell(1).textContent = s.type;
+    row.insertCell(2).textContent = s.qty;
+    row.insertCell(3).textContent = `$${s.unitPrice.toFixed(2)}`;
+    row.insertCell(4).textContent = `$${s.total.toFixed(2)}`;
+    grandTotal += s.total;
+  });
+
+  const totalRow = table.insertRow();
+  totalRow.innerHTML = `<td colspan="4" style="font-weight:bold;">Total Service Estimate</td>
+                        <td style="font-weight:bold;">$${grandTotal.toFixed(2)}</td>`;
+}
+
+function addSubcontractor() {
+  const desc = document.getElementById("subcontractorDesc").value;
+  const days = parseInt(document.getElementById("subcontractorDays").value);
+  const total = parseFloat(document.getElementById("subcontractorTotal").value);
+
+  if (!desc || isNaN(days) || isNaN(total)) {
+    alert("Please fill out all subcontractor fields.");
+    return;
+  }
+
+  subcontractorList.push({ desc, days, total });
+  updateSubcontractorSummary();
+
+  document.getElementById("subcontractorDesc").value = "";
+  document.getElementById("subcontractorDays").value = "";
+  document.getElementById("subcontractorTotal").value = "";
+}
+
+function updateSubcontractorSummary() {
+  const div = document.getElementById("subcontractorSummary");
+  div.innerHTML = "<strong>Subcontractor Summary:</strong><ul>";
+  let grandTotal = 0;
+
+  subcontractorList.forEach((item, i) => {
+    div.innerHTML += `<li>${i + 1}. ${item.desc} – ${item.days} days – $${item.total.toFixed(2)}</li>`;
+    grandTotal += item.total;
+  });
+
+  div.innerHTML += `</ul><strong>Total Subcontractor Cost: $${grandTotal.toFixed(2)}</strong>`;
+}
+const subcontractorItems = [];
+
+function addSubcontractorWork() {
+  const type = document.getElementById('subWorkType').value;
+  const desc = document.getElementById('subWorkDesc').value.trim();
+  const qty = parseFloat(document.getElementById('subQty').value);
+  const unit = document.getElementById('subUnit').value;
+  const price = parseFloat(document.getElementById('subUnitPrice').value);
+
+  if (!type || !desc || isNaN(qty) || qty <= 0 || isNaN(price) || price <= 0) {
+    alert("Please fill all fields correctly.");
+    return;
+  }
+
+  const total = qty * price;
+  subcontractorItems.push({ type, desc, qty, unit, price, total });
+
+  renderSubcontractorSummary();
+  clearSubcontractorInputs();
+}
+
+function renderSubcontractorSummary() {
+  const table = document.getElementById("subcontractorEstimateTable");
+  table.innerHTML = `
+    <tr>
+      <th>S.No</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Quantity</th>
+      <th>Unit</th>
+      <th>Unit Price ($)</th>
+      <th>Total Price ($)</th>
+    </tr>`;
+
+  let grandTotal = 0;
+
+  subcontractorItems.forEach((item, i) => {
+    const row = table.insertRow();
+    row.insertCell(0).textContent = i + 1;
+    row.insertCell(1).textContent = item.type;
+    row.insertCell(2).textContent = item.desc;
+    row.insertCell(3).textContent = item.qty;
+    row.insertCell(4).textContent = item.unit;
+    row.insertCell(5).textContent = `$${item.price.toFixed(2)}`;
+    row.insertCell(6).textContent = `$${item.total.toFixed(2)}`;
+    grandTotal += item.total;
+  });
+
+  const totalRow = table.insertRow();
+  totalRow.innerHTML = `<td colspan="6" style="font-weight:bold;">Total Subcontractor Estimate</td>
+                        <td style="font-weight:bold;">$${grandTotal.toFixed(2)}</td>`;
+}
+
+function clearSubcontractorInputs() {
+  document.getElementById('subWorkType').value = '';
+  document.getElementById('subWorkDesc').value = '';
+  document.getElementById('subQty').value = '';
+  document.getElementById('subUnit').value = 'SFT';
+  document.getElementById('subUnitPrice').value = '';
+}
+function downloadOtherEstimatesExcel() {
+  const wb = XLSX.utils.book_new();
+  const sheetData = [];
+
+  // 1️⃣ Manpower Estimate
+  sheetData.push(["1️⃣ Manpower Estimate"]);
+  sheetData.push(["S.No", "Work Description", "Days", "Team", "Total Cost ($)"]);
+  let manpowerTotal = 0;
+  workAssignments.forEach((item, i) => {
+    manpowerTotal += item.cost;
+    sheetData.push([i + 1, item.desc, item.days, item.teamName, item.cost.toFixed(2)]);
+  });
+  sheetData.push(["", "", "", "Total", manpowerTotal.toFixed(2)]);
+
+  // 2️⃣ Equipment Estimate
+  sheetData.push([]);
+  sheetData.push(["2️⃣ Equipment Estimate"]);
+  sheetData.push(["S.No", "Work Description", "Days", "Equipment Set", "Total Cost ($)"]);
+  let equipmentTotal = 0;
+  equipmentAssignments.forEach((item, i) => {
+    equipmentTotal += item.total;
+    sheetData.push([i + 1, item.desc, item.days, item.setName, item.total.toFixed(2)]);
+  });
+  sheetData.push(["", "", "", "Total", equipmentTotal.toFixed(2)]);
+
+  // 3️⃣ Service Pricing Estimate
+  sheetData.push([]);
+  sheetData.push(["3️⃣ Service Pricing Estimate"]);
+  sheetData.push(["S.No", "Service Type", "Quantity", "Unit Price ($)", "Total Price ($)"]);
+  let serviceTotal = 0;
+  serviceEstimates.forEach((item, i) => {
+    serviceTotal += item.total;
+    sheetData.push([
+      i + 1,
+      item.type,
+      item.qty,
+      item.unitPrice.toFixed(2),
+      item.total.toFixed(2),
+    ]);
+  });
+  sheetData.push(["", "", "", "Total", serviceTotal.toFixed(2)]);
+
+  // 4️⃣ Subcontractor Estimate
+  sheetData.push([]);
+  sheetData.push(["4️⃣ Subcontractor Estimate"]);
+  sheetData.push(["S.No", "Type", "Description", "Quantity", "Unit", "Unit Price ($)", "Total Price ($)"]);
+  let subcontractorTotal = 0;
+  subcontractorItems.forEach((item, i) => {
+    subcontractorTotal += item.total;
+    sheetData.push([
+      i + 1,
+      item.type,
+      item.desc,
+      item.qty,
+      item.unit,
+      item.price.toFixed(2),
+      item.total.toFixed(2),
+    ]);
+  });
+  sheetData.push(["", "", "", "", "", "Total", subcontractorTotal.toFixed(2)]);
+
+  // Generate Excel Sheet
+  const ws = XLSX.utils.aoa_to_sheet(sheetData);
+  XLSX.utils.book_append_sheet(wb, ws, "Other Estimates");
+  XLSX.writeFile(wb, "Other_Estimates.xlsx");
+}
+function getUnit(mat) {
+  const matLower = mat.toLowerCase();
+  if (matLower.includes("pipe") && !matLower.includes("box")) return "ft";
+  if (matLower.includes("volume")) return "CYD";
+  if (matLower.includes("wax tape")) return "ft";
+  if (matLower.includes("lubricant")) return "gal";
+  if (matLower.includes("chlorine")) return "lbs";
+  if (matLower.includes("gasket") || matLower.includes("megalug") || matLower.includes("hydrant") || matLower.includes("valve") || matLower.includes("box")) return "pcs";
+  return "pcs"; // default
+}
+
+
+
+</script>
+
+  </script>
+</body>
+</html>
+
+
+  <div class="output" id="results">
+    <h2>Materials Summary</h2>
+    <div id="summary"></div>
+  </div>
+
+  <button onclick="downloadExcel()">Download Excel</button>
+  <button onclick="clearAll()">Clear All</button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    // Move your database and fittings objects above everything
+    const database = {
+"3 inch Ductile Iron Pipe": {"3 inch Pipe": 1},
+  "4 inch Ductile Iron Pipe": {"4 inch Pipe": 1},
+  "6 inch Ductile Iron Pipe": {"6 inch Pipe": 1},
+      "8 inch Ductile Iron Pipe": {"8 inch Pipe": 1},
+      "12 inch Ductile Iron Pipe": {"12 inch Pipe": 1},
+      "16 inch Ductile Iron Pipe": {"16 inch Pipe": 1},
+"8 inch HDPE Pipe": {"8 inch HDPE Pipe": 1},
+  "12 inch HDPE Pipe": {"12 inch HDPE Pipe": 1},
+  "16 inch HDPE Pipe": {"16 inch HDPE Pipe": 1},
+"3 inch Gate Valve/Box": {"3 inch Megalugs": 2, "3 inch Gaskets": 2, "3 inch D Box": 1},
+      "4 inch Gate Valve/Box": {"4 inch Megalugs": 2, "4 inch Gaskets": 2, "4 inch D Box": 1},
+      "6 inch Gate Valve/Box": {"6 inch Megalugs": 2, "6 inch Gaskets": 2, "6 inch D Box": 1},
+      "8 inch Gate Valve/Box": {"8 inch Megalugs": 2, "8 inch Gaskets": 2, "8 inch D Box": 1},
+      "12 inch Gate Valve/Box": {"12 inch Megalugs": 2, "12 inch Gaskets": 2, "12 inch D Box": 1},
+      "16 inch Gate Valve/Box": {"16 inch Megalugs": 2, "16 inch Gaskets": 2, "16 inch D Box": 1},
+      "8 inch Gate Valve/Well": {"8 inch Megalugs": 2, "8 inch Gaskets": 2, "8 inch Gate Well": 1},
+      "12 inch Gate Valve/Well": {"12 inch Megalugs": 2, "12 inch Gaskets": 2, "12 inch Gate Well": 1},
+      "16 inch Gate Valve/Well": {"16 inch Megalugs": 2, "16 inch Gaskets": 2, "16 inch Gate Well": 1},
+      "Fire Hydrant": {"Fire Hydrant Assembly": 1, "6 inch Gate Valve": 1, "6 inch Megalugs": 3, "6 inch Gaskets": 3, "6 inch D Box": 1},
+"Hydrant Extension 6-inch": {}
+
+    };
+const wmCategories = {
+  "Pipes": [
+    "3 inch Ductile Iron Pipe", "4 inch Ductile Iron Pipe", "6 inch Ductile Iron Pipe",
+    "8 inch Ductile Iron Pipe", "12 inch Ductile Iron Pipe", "16 inch Ductile Iron Pipe",
+    "8 inch HDPE Pipe", "12 inch HDPE Pipe", "16 inch HDPE Pipe"
+  ],
+  "Gate Valves": [
+"3 inch Gate Valve/Box",
+    "4 inch Gate Valve/Box", "6 inch Gate Valve/Box", "8 inch Gate Valve/Box",
+    "12 inch Gate Valve/Box", "16 inch Gate Valve/Box",
+    "8 inch Gate Valve/Well", "12 inch Gate Valve/Well", "16 inch Gate Valve/Well"
+  ],
+  "Hydrants": [
+    "Fire Hydrant",
+"Hydrant Extension 6-inch"
+  ]
+};
+
+    const fittings = {
+  "16-inch 45° Bend": {"16 inch Megalugs": 2, "16 inch Gaskets": 2},
+  "16-inch 22.5° Bend": {"16 inch Megalugs": 2, "16 inch Gaskets": 2},
+  "16-inch 11.25° Bend": {"16 inch Megalugs": 2, "16 inch Gaskets": 2},
+  "12-inch 90° Bend": {"12 inch Megalugs": 2, "12 inch Gaskets": 2},
+  "12-inch 45° Bend": {"12 inch Megalugs": 2, "12 inch Gaskets": 2},
+  "12-inch 22.5° Bend": {"12 inch Megalugs": 2, "12 inch Gaskets": 2},
+  "12-inch 11.25° Bend": {"12 inch Megalugs": 2, "12 inch Gaskets": 2},
+  "8-inch 90° Bend": {"8 inch Megalugs": 2, "8 inch Gaskets": 2},
+  "8-inch 45° Bend": {"8 inch Megalugs": 2, "8 inch Gaskets": 2},
+  "8-inch 22.5° Bend": {"8 inch Megalugs": 2, "8 inch Gaskets": 2},
+  "8-inch 11.25° Bend": {"8 inch Megalugs": 2, "8 inch Gaskets": 2},
+  "6-inch 90° Bend": {"6 inch Megalugs": 2, "6 inch Gaskets": 2},
+  "6-inch 45° Bend": {"6 inch Megalugs": 2, "6 inch Gaskets": 2},
+  "6-inch 22.5° Bend": {"6 inch Megalugs": 2, "6 inch Gaskets": 2},
+  "6-inch 11.25° Bend": {"6 inch Megalugs": 2, "6 inch Gaskets": 2},
+  "4-inch 90° Bend": {"4 inch Megalugs": 2, "4 inch Gaskets": 2},
+  "4-inch 45° Bend": {"4 inch Megalugs": 2, "4 inch Gaskets": 2},
+  "4-inch 22.5° Bend": {"4 inch Megalugs": 2, "4 inch Gaskets": 2},
+  "4-inch 11.25° Bend": {"4 inch Megalugs": 2, "4 inch Gaskets": 2},
+"3-inch 90° Bend": {"3 inch Megalugs": 2, "3 inch Gaskets": 2},
+  "3-inch 45° Bend": {"3 inch Megalugs": 2, "3 inch Gaskets": 2},
+  "3-inch 22.5° Bend": {"3 inch Megalugs": 2, "3 inch Gaskets": 2},
+  "3-inch 11.25° Bend": {"3 inch Megalugs": 2, "3 inch Gaskets": 2},
+  "Tee -16x16x16": {"16 inch Megalugs": 3, "16 inch Gaskets": 3},
+  "Tee -16x16x12": {"16 inch Megalugs": 2, "12 inch Megalugs": 1, "16 inch Gaskets": 2, "12 inch Gaskets": 1},
+  "Tee -16x16x8": {"16 inch Megalugs": 2, "8 inch Megalugs": 1, "16 inch Gaskets": 2, "8 inch Gaskets": 1},
+  "Tee -16x16x6": {"16 inch Megalugs": 2, "6 inch Megalugs": 1, "16 inch Gaskets": 2, "6 inch Gaskets": 1},
+  "Tee -16x16x4": {"16 inch Megalugs": 2, "4 inch Megalugs": 1, "16 inch Gaskets": 2, "4 inch Gaskets": 1},
+  "Tee -12x12x12": {"12 inch Megalugs": 3, "12 inch Gaskets": 3},
+  "Tee -12x12x8": {"12 inch Megalugs": 2, "8 inch Megalugs": 1, "12 inch Gaskets": 2, "8 inch Gaskets": 1},
+  "Tee -12x12x6": {"12 inch Megalugs": 2, "6 inch Megalugs": 1, "12 inch Gaskets": 2, "6 inch Gaskets": 1},
+  "Tee -12x12x4": {"12 inch Megalugs": 2, "4 inch Megalugs": 1, "12 inch Gaskets": 2, "4 inch Gaskets": 1},
+  "Tee -8x8x8": {"8 inch Megalugs": 3, "8 inch Gaskets": 3},
+  "Tee -8x8x6": {"8 inch Megalugs": 2, "6 inch Megalugs": 1, "8 inch Gaskets": 2, "6 inch Gaskets": 1},
+  "Tee -8x8x4": {"8 inch Megalugs": 2, "4 inch Megalugs": 1, "8 inch Gaskets": 2, "4 inch Gaskets": 1},
+  "Reducer -16x12": {"16 inch Megalugs": 1, "12 inch Megalugs": 1, "16 inch Gaskets": 1, "12 inch Gaskets": 1},
+  "Reducer -16x8": {"16 inch Megalugs": 1, "8 inch Megalugs": 1, "16 inch Gaskets": 1, "8 inch Gaskets": 1},
+  "Reducer -16x6": {"16 inch Megalugs": 1, "6 inch Megalugs": 1, "16 inch Gaskets": 1, "6 inch Gaskets": 1},
+  "Reducer -16x4": {"16 inch Megalugs": 1, "4 inch Megalugs": 1, "16 inch Gaskets": 1, "4 inch Gaskets": 1},
+  "Reducer -12x8": {"12 inch Megalugs": 1, "8 inch Megalugs": 1, "12 inch Gaskets": 1, "8 inch Gaskets": 1},
+  "Reducer -12x6": {"12 inch Megalugs": 1, "6 inch Megalugs": 1, "12 inch Gaskets": 1, "6 inch Gaskets": 1},
+  "Reducer -12x4": {"12 inch Megalugs": 1, "4 inch Megalugs": 1, "12 inch Gaskets": 1, "4 inch Gaskets": 1},
+  "Reducer -8x6": {"8 inch Megalugs": 1, "6 inch Megalugs": 1, "8 inch Gaskets": 1, "6 inch Gaskets": 1},
+  "Reducer -8x4": {"8 inch Megalugs": 1, "4 inch Megalugs": 1, "8 inch Gaskets": 1, "4 inch Gaskets": 1},
+  "16 inch Solid Sleeve": { "16 inch Megalugs": 2, "16 inch Gaskets": 2 },
+"12 inch Solid Sleeve": { "12 inch Megalugs": 2, "12 inch Gaskets": 2 },
+"8 inch Solid Sleeve": { "8 inch Megalugs": 2, "8 inch Gaskets": 2 },
+"6 inch Solid Sleeve": { "6 inch Megalugs": 2, "6 inch Gaskets": 2 },
+"4 inch Solid Sleeve": { "4 inch Megalugs": 2, "4 inch Gaskets": 2 },
+"3 inch Solid Sleeve": { "3 inch Megalugs": 2, "3 inch Gaskets": 2 },
+  "Cross 16": {"16 inch Megalugs": 4, "16 inch Gaskets": 4},
+  "Cross 12": {"12 inch Megalugs": 4, "12 inch Gaskets": 4},
+  "Cross 8": {"8 inch Megalugs": 4, "8 inch Gaskets": 4},
+  "Cross 6": {"6 inch Megalugs": 4, "6 inch Gaskets": 4},
+  "Cross 4": {"4 inch Megalugs": 4, "4 inch Gaskets": 4},
+// === Caps ===
+"Cap - 3 inch": {"3 inch Megalugs": 1, "3 inch Gaskets": 1, "Thrust Blocks": 2},
+"Cap - 4 inch": {"4 inch Megalugs": 1, "4 inch Gaskets": 1, "Thrust Blocks": 2},
+"Cap - 6 inch": {"6 inch Megalugs": 1, "6 inch Gaskets": 1, "Thrust Blocks": 2},
+"Cap - 8 inch": {"8 inch Megalugs": 1, "8 inch Gaskets": 1, "Thrust Blocks": 2},
+"Cap - 12 inch": {"12 inch Megalugs": 1, "12 inch Gaskets": 1, "Thrust Blocks": 2},
+"Cap - 16 inch": {"16 inch Megalugs": 1, "16 inch Gaskets": 1, "Thrust Blocks": 2},
+
+// === Plugs ===
+"Plug - 3 inch": {"3 inch Megalugs": 1, "3 inch Gaskets": 1, "Thrust Blocks": 2},
+"Plug - 4 inch": {"4 inch Megalugs": 1, "4 inch Gaskets": 1, "Thrust Blocks": 2},
+"Plug - 6 inch": {"6 inch Megalugs": 1, "6 inch Gaskets": 1, "Thrust Blocks": 2},
+"Plug - 8 inch": {"8 inch Megalugs": 1, "8 inch Gaskets": 1, "Thrust Blocks": 2},
+"Plug - 12 inch": {"12 inch Megalugs": 1, "12 inch Gaskets": 1, "Thrust Blocks": 2},
+"Plug - 16 inch": {"16 inch Megalugs": 1, "16 inch Gaskets": 1, "Thrust Blocks": 2},
+
+// === Stand Pipes ===
+"Stand Pipe - 3 inch": {"3 inch Megalugs": 1, "3 inch Gaskets": 1, "Thrust Blocks": 2},
+"Stand Pipe - 4 inch": {"4 inch Megalugs": 1, "4 inch Gaskets": 1, "Thrust Blocks": 2},
+"Stand Pipe - 6 inch": {"6 inch Megalugs": 1, "6 inch Gaskets": 1, "Thrust Blocks": 2},
+"Stand Pipe - 8 inch": {"8 inch Megalugs": 1, "8 inch Gaskets": 1, "Thrust Blocks": 2},
+"Stand Pipe - 12 inch": {"12 inch Megalugs": 1, "12 inch Gaskets": 1, "Thrust Blocks": 2},
+"Stand Pipe - 16 inch": {"16 inch Megalugs": 1, "16 inch Gaskets": 1, "Thrust Blocks": 2},
+// === New Bends ===
+"16-inch 90° Bend": { "16 inch Megalugs": 2, "16 inch Gaskets": 2 },
+
+// === New Tees ===
+"Tee -8x8x3": {
+  "8 inch Megalugs": 2, "3 inch Megalugs": 1,
+  "8 inch Gaskets": 2, "3 inch Gaskets": 1
+},
+"Tee -12x12x3": {
+  "12 inch Megalugs": 2, "3 inch Megalugs": 1,
+  "12 inch Gaskets": 2, "3 inch Gaskets": 1
+},
+"Tee -16x16x3": {
+  "16 inch Megalugs": 2, "3 inch Megalugs": 1,
+  "16 inch Gaskets": 2, "3 inch Gaskets": 1
+},
+"Tee -6x6x4": {
+  "6 inch Megalugs": 2, "4 inch Megalugs": 1,
+  "6 inch Gaskets": 2, "4 inch Gaskets": 1
+},
+"Tee -6x6x3": {
+  "6 inch Megalugs": 2, "3 inch Megalugs": 1,
+  "6 inch Gaskets": 2, "3 inch Gaskets": 1
+},
+"Tee -6x6x6": {
+  "6 inch Megalugs": 3,
+  "6 inch Gaskets": 3
+},
+"Tee -4x4x3": {
+  "4 inch Megalugs": 2, "3 inch Megalugs": 1,
+  "4 inch Gaskets": 2, "3 inch Gaskets": 1
+},
+"Tee -4x4x4": {
+  "4 inch Megalugs": 3,
+  "4 inch Gaskets": 3
+},
+"Tee -3x3x3": {
+  "3 inch Megalugs": 3,
+  "3 inch Gaskets": 3
+},
+"Reducer -4x3": {
+  "4 inch Megalugs": 1, "3 inch Megalugs": 1,
+  "4 inch Gaskets": 1, "3 inch Gaskets": 1
+},
+"Reducer -6x3": {
+  "6 inch Megalugs": 1, "3 inch Megalugs": 1,
+  "6 inch Gaskets": 1, "3 inch Gaskets": 1
+},
+"Reducer -6x4": {
+  "6 inch Megalugs": 1, "4 inch Megalugs": 1,
+  "6 inch Gaskets": 1, "4 inch Gaskets": 1
+},
+"Reducer -8x3": {
+  "8 inch Megalugs": 1, "3 inch Megalugs": 1,
+  "8 inch Gaskets": 1, "3 inch Gaskets": 1
+},
+"Reducer -12x3": {
+  "12 inch Megalugs": 1, "3 inch Megalugs": 1,
+  "12 inch Gaskets": 1, "3 inch Gaskets": 1
+},
+"Reducer -16x3": {
+  "16 inch Megalugs": 1, "3 inch Megalugs": 1,
+  "16 inch Gaskets": 1, "3 inch Gaskets": 1
+},
+"Cross 3": {
+  "3 inch Megalugs": 4,
+  "3 inch Gaskets": 4
+},
+"Solid Sleeve (3\")": {
+  "3 inch Megalugs": 2,
+  "3 inch Gaskets": 2
+},
+"HDPE to DI - 6 inch": {
+  "6 inch Stiffener (HDPE)": 1,
+  "6 inch Solid Sleeve": 1,
+  "6 inch Gaskets": 2,
+  "6 inch T Bolts & Nuts": 2,
+  "6 inch Megalug Series 2000PV (HDPE)": 1,
+  "6 inch Megalug Series 1100 (DI)": 1
+},
+"HDPE to DI - 8 inch": {
+  "8 inch Stiffener (HDPE)": 1,
+  "8 inch Solid Sleeve": 1,
+  "8 inch Gaskets": 2,
+  "8 inch T Bolts & Nuts": 2,
+  "8 inch Megalug Series 2000PV (HDPE)": 1,
+  "8 inch Megalug Series 1100 (DI)": 1
+},
+"HDPE to DI - 12 inch": {
+  "12 inch Stiffener (HDPE)": 1,
+  "12 inch Solid Sleeve": 1,
+  "12 inch Gaskets": 2,
+  "12 inch T Bolts & Nuts": 2,
+  "12 inch Megalug Series 2000PV (HDPE)": 1,
+  "12 inch Megalug Series 1100 (DI)": 1
+},
+"HDPE to DI - 16 inch": {
+  "16 inch Stiffener (HDPE)": 1,
+  "16 inch Solid Sleeve": 1,
+  "16 inch Gaskets": 2,
+  "16 inch T Bolts & Nuts": 2,
+  "16 inch Megalug Series 2000PV (HDPE)": 1,
+  "16 inch Megalug Series 1100 (DI)": 1
+},
+"3 inch Omni Coupling": { "3 inch Omni Coupling": 1 },
+"4 inch Omni Coupling": { "4 inch Omni Coupling": 1 },
+"6 inch Omni Coupling": { "6 inch Omni Coupling": 1 },
+"8 inch Omni Coupling": { "8 inch Omni Coupling": 1 },
+"12 inch Omni Coupling": { "12 inch Omni Coupling": 1 },
+"16 inch Omni Coupling": { "16 inch Omni Coupling": 1 }
+
+};
+const fittingCategories = {
+  "Bends": [
+"16-inch 90° Bend",
+    "16-inch 45° Bend", "16-inch 22.5° Bend", "16-inch 11.25° Bend",
+    "12-inch 90° Bend", "12-inch 45° Bend", "12-inch 22.5° Bend", "12-inch 11.25° Bend",
+    "8-inch 90° Bend", "8-inch 45° Bend", "8-inch 22.5° Bend", "8-inch 11.25° Bend",
+    "6-inch 90° Bend", "6-inch 45° Bend", "6-inch 22.5° Bend", "6-inch 11.25° Bend",
+    "4-inch 90° Bend", "4-inch 45° Bend", "4-inch 22.5° Bend", "4-inch 11.25° Bend",
+"3-inch 90° Bend", "3-inch 45° Bend", "3-inch 22.5° Bend", "3-inch 11.25° Bend"
+  ],
+  "Tees": [
+  "Tee -16x16x16", "Tee -16x16x12", "Tee -16x16x8", "Tee -16x16x6", "Tee -16x16x4", "Tee -16x16x3",
+  "Tee -12x12x12", "Tee -12x12x8", "Tee -12x12x6", "Tee -12x12x4", "Tee -12x12x3",
+  "Tee -8x8x8", "Tee -8x8x6", "Tee -8x8x4", "Tee -8x8x3",
+  "Tee -6x6x6", "Tee -6x6x4", "Tee -6x6x3",
+  "Tee -4x4x4", "Tee -4x4x3",
+  "Tee -3x3x3"
+],
+  "Reducers": ["Reducer -16x12", "Reducer -16x8", "Reducer -16x4", "Reducer -16x3",
+"Reducer -12x8", "Reducer -12x6", "Reducer -12x4", "Reducer -12x3",
+"Reducer -8x6", "Reducer -8x4", "Reducer -8x3",
+"Reducer -6x4", "Reducer -6x3",
+"Reducer -4x3"
+  ],
+  "Crosses": [
+  "Cross 16", "Cross 12", "Cross 8", "Cross 6", "Cross 4", "Cross 3"
+],
+ "Solid Sleeves": [
+  "16 inch Solid Sleeve", "12 inch Solid Sleeve",
+  "8 inch Solid Sleeve", "6 inch Solid Sleeve",
+  "4 inch Solid Sleeve", "3 inch Solid Sleeve"
+],
+"Caps": ["3 inch", "4 inch", "6 inch", "8 inch", "12 inch", "16 inch"],
+"Plugs": ["3 inch", "4 inch", "6 inch", "8 inch", "12 inch", "16 inch"],
+"Stand Pipe": ["3 inch", "4 inch", "6 inch", "8 inch", "12 inch", "16 inch"],
+"HDPE to DI Connections": [
+  "HDPE to DI - 6 inch",
+  "HDPE to DI - 8 inch",
+  "HDPE to DI - 12 inch",
+  "HDPE to DI - 16 inch"
+],
+"Omni Couplings": [
+  "3 inch Omni Coupling",
+  "4 inch Omni Coupling",
+  "6 inch Omni Coupling",
+  "8 inch Omni Coupling",
+  "12 inch Omni Coupling",
+  "16 inch Omni Coupling"
+]
+
+};
+
+    const results = [];
+
+    function populateDropdown(id, items) {
+      const select = document.getElementById(id);
+      select.innerHTML = '<option value="">-- Select an item --</option>';
+      for (let key in items) {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = key;
+        select.appendChild(opt);
+      }
+    }
+function clearWMInputs() {
+  document.getElementById('wmCategory').value = '';
+  document.getElementById('wmItem').innerHTML = '<option value="">-- Select WM Item --</option>';
+  document.getElementById('wmQty').value = '';
+}
+
+function clearFittingInputs() {
+  document.getElementById('fittingCategory').value = '';
+  document.getElementById('fittingItem').innerHTML = '<option value="">-- Select a fitting --</option>';
+  document.getElementById('fittingQty').value = '';
+}
+
+function clearServiceInputs() {
+  document.getElementById('serviceItem').value = '';
+  document.getElementById('serviceQty').value = '';
+  document.getElementById('pipeLength').value = ''; // 👈 Make sure this is included
+}
+
+function clearBackfillInputs() {
+  document.getElementById('backfillType').value = '';
+  document.getElementById('backfillPipeLength').value = '';
+  document.getElementById('backfillPipeWidth').value = '';
+  document.getElementById('backfillPipeDepth').value = '';
+}
+
+function clearRestorationInputs() {
+  document.getElementById('restorationType').value = '';
+  document.getElementById('materialType').value = '';
+  document.getElementById('resLength').value = '';
+  document.getElementById('resBreadth').value = '';
+  document.getElementById('resThickness').value = '';
+}
+
+function clearProjectDetails() {
+  document.getElementById('projectName').value = '';
+  document.getElementById('estimatorName').value = '';
+  document.getElementById('estimateDate').value = '';
+}
+function addItem(type) {
+  const item = document.getElementById(type + 'Item').value;
+  const qty = parseInt(document.getElementById(type + 'Qty').value);
+  const store = type === 'fitting' ? fittings : database;
+
+  if (!item || isNaN(qty) || qty < 1) return;
+
+  const entry = {};
+  entry[item] = {};
+
+  for (let key in store[item]) {
+    const value = store[item][key] * qty;
+    entry[item][key] = value;
+
+    // ✅ Automatically add T Bolts & Nuts for each Megalug
+    if (key.includes("Megalugs")) {
+      const size = key.replace(" Megalugs", ""); // e.g., "6 inch"
+      const boltKey = `${size} T Bolts & Nuts`;
+      entry[item][boltKey] = value;
+    }
+  }
+
+  // ✅ Add 1 Gate Well Cover for each Gate Well item
+  if (item.includes("Gate Valve/Well")) {
+    entry[item]["Gate Well Cover"] = qty; // 1 per gate well
+  }
+
+  // ✅ Add Wax Tape:
+  if (item.toLowerCase().includes("gate valve")) {
+    entry[item]["Wax Tape"] = 10 * qty; // 10 LFT per valve
+  }
+
+  if (item.toLowerCase().includes("fire hydrant")) {
+    entry[item]["Wax Tape"] = 15 * qty; // 15 LFT per hydrant
+  }
+
+  entry[item]['_quantity'] = qty;
+
+  results.push(entry);
+  renderResults();
+  updateLivePreview();
+}
+
+    
+function addService() {
+  const item = document.getElementById('serviceItem').value;
+  const qty = parseInt(document.getElementById('serviceQty').value);
+  const copperLength = parseFloat(document.getElementById('pipeLength').value);
+
+  if (!item || isNaN(qty) || qty < 1 || isNaN(copperLength)) return;
+
+  const entry = {};
+  entry[item] = {};
+
+  // ✅ Service Line Materials
+  entry[item]["1 inch Copper Pipe (ft)"] = qty * copperLength;
+  entry[item]["Wax Tape"] = qty * 3;
+  entry[item]["Ready To Use Concrete Mix"] = qty;
+  entry[item]["Sold Bricks"] = qty * 3;
+  entry[item]["Enlarged Base for CB"] = qty;
+
+  const sizeLabel = item.includes("1 inch") ? "1 inch" : "2 inch";
+  entry[item][`${sizeLabel} Tap Saddle`] = qty;
+  entry[item][`${sizeLabel} Corporation Stop`] = qty;
+  entry[item][`${sizeLabel} Curb Stop`] = qty;
+  entry[item][`${sizeLabel} Curb Box`] = qty;
+
+  entry[item]["_quantity"] = qty;
+  results.push(entry);
+  renderResults();
+  updateLivePreview();
+}
+
+    
+function calculateOthers() {
+
+  let thrustBlocks = 0;
+  let polyLength = 0;
+  let pipeLengths = {
+    "3 inch": 0, "4 inch": 0, "6 inch": 0,
+    "8 inch": 0, "12 inch": 0, "16 inch": 0
+  };
+  let extraJoints = 0;
+
+  results.forEach(entry => {
+    for (let item in entry) {
+      const mat = entry[item];
+
+      // Count Thrust Blocks
+      if (
+        item.includes('Tee') || item.includes('Bend') ||
+        item.includes('Valve') || item.includes('Hydrant') ||
+        item.includes("Cap") || item.includes("Plug") ||
+        item.includes("Stand Pipe") || item.includes("HDPE to DI")
+      ) {
+        thrustBlocks += 2 * (mat._quantity || 1);
+      }
+
+      // Count Polywrap Length
+      if (
+        item.includes('Pipe') &&
+        !["1 inch Copper Pipe", "2 inch Service", "1 inch Service"].includes(item)
+      ) {
+        for (let key in mat) {
+          if (key.includes('Pipe') && !key.includes('_quantity')) {
+            polyLength += mat[key];
+
+            // Count pipe lengths by size
+            for (let size in pipeLengths) {
+              if (key.includes(size)) {
+                pipeLengths[size] += mat[key];
+              }
+            }
+          }
+        }
+      }
+
+      const qty = mat._quantity || 1;
+
+      // Count fitting joints
+      if (item.includes("Gate Valve")) extraJoints += 4 * qty;
+      if (item.includes("Fire Hydrant")) extraJoints += 2 * qty;
+      if (item.includes("Bend")) extraJoints += 4 * qty;
+      if (item.includes("Tee")) extraJoints += 6 * qty;
+      if (item.includes("Cross")) extraJoints += 8 * qty;
+      if (item.includes("Solid Sleeve")) extraJoints += 4 * qty;
+      if (item.includes("Cap")) extraJoints += 2 * qty;
+      if (item.includes("Plug")) extraJoints += 2 * qty;
+      if (item.includes("Stand Pipe")) extraJoints += 2 * qty;
+      if (item.includes("HDPE to DI")) extraJoints += 2 * qty;
+    }
+  });
+
+  // === Pipe Joint Lubricant ===
+  let pipeJoints = 0;
+  for (let size in pipeLengths) {
+  const lengthFt = pipeLengths[size];
+
+  // Check if any DI pipe of this size exists
+  let isDI = false;
+  results.forEach(entry => {
+    for (let item in entry) {
+      if (item.includes(`${size} Ductile Iron Pipe`)) {
+        isDI = true;
+      }
+    }
+  });
+
+  if (isDI && lengthFt > 0) {
+    const jointCount = Math.floor(lengthFt / 20);
+    pipeJoints += jointCount * 2;  // 2 oz per joint
+  }
+}
+    
+  
+
+  const totalJoints = pipeJoints + extraJoints;
+  const totalOz = totalJoints * 2; // assume 2oz average per joint
+  const totalGallons = (totalOz / 128) * 1.5; // 1.5 safety factor
+
+
+  // === Final Output ===
+  const other = {};
+  other["Thrust Blocks"] = thrustBlocks;
+  other["Pipe Joint Wedges"] = thrustBlocks * 2;
+  other["Polywrap (ft)"] = polyLength;
+  other["Pipe Lubricant (gal)"] = parseFloat(totalGallons.toFixed(2));
+
+  results.push({ "Other Materials": other });
+  renderResults();
+updateLivePreview();
+
+}
+function calculateChlorination() {
+  const pipeSizes = {
+    "3 inch": 3,
+    "4 inch": 4,
+    "6 inch": 6,
+    "8 inch": 8,
+    "12 inch": 12,
+    "16 inch": 16
+  };
+
+  let pipeLengths = {
+    "3 inch": 0,
+    "4 inch": 0,
+    "6 inch": 0,
+    "8 inch": 0,
+    "12 inch": 0,
+    "16 inch": 0
+  };
+// Traverse results and collect pipe lengths (for DI & HDPE only, skip services)
+results.forEach(entry => {
+  for (let item in entry) {
+    const materials = entry[item];
+
+    // Skip service lines
+    if (item.includes("1 inch Service") || item.includes("2 inch Service") || item.includes("1 inch Copper Pipe")) {
+      continue;
+    }
+
+    for (let size in pipeSizes) {
+      const diKey = `${size} Pipe`;
+      const hdpeKey = `${size} HDPE Pipe`;
+
+      if (materials[diKey]) {
+        pipeLengths[size] += materials[diKey];
+      }
+
+      if (materials[hdpeKey]) {
+        pipeLengths[size] += materials[hdpeKey];
+      }
+    }
+  }
+});
+  
+  // === Calculate Volume of Water ===
+  let totalVolumeGallons = 0;
+  for (let size in pipeLengths) {
+    const diaInches = pipeSizes[size];
+    const lengthFt = pipeLengths[size];
+    if (lengthFt > 0) {
+      const radiusFt = (diaInches / 12) / 2;
+      const volumeFt3 = Math.PI * Math.pow(radiusFt, 2) * lengthFt;
+      totalVolumeGallons += volumeFt3 * 7.48052;
+    }
+  }
+
+  // === Chlorine Required at 50 mg/L ===
+  const chlorineLbs = (totalVolumeGallons * 50 / 1_000_000) * 8.34;
+
+  // === AWWA Allowable Leakage Calculation ===
+  const totalLengthFt = Object.values(pipeLengths).reduce((a, b) => a + b, 0);
+  const weightedDiameter = Object.entries(pipeLengths)
+    .reduce((sum, [size, len]) => sum + (pipeSizes[size] * len), 0) / (totalLengthFt || 1);
+  const testPressurePsi = 150;
+  const allowableLeakage = (totalLengthFt * weightedDiameter * Math.sqrt(testPressurePsi)) / 148000;
+
+  const chlorinationResult = {
+    "Estimated Volume of Water (gal)": parseFloat(totalVolumeGallons.toFixed(2)),
+    "Required Chlorine (at 50 mg/L) (lbs)": parseFloat(chlorineLbs.toFixed(2)),
+    "Allowable Leakage (gal/hr)": parseFloat(allowableLeakage.toFixed(2))
+  };
+
+  // Remove existing Pressure Test & Chlorination entry if exists
+  for (let i = results.length - 1; i >= 0; i--) {
+    if (results[i]["Pressure Test & Chlorination"]) {
+      results.splice(i, 1);
+      break;
+    }
+  }
+
+  results.push({ "Pressure Test & Chlorination": chlorinationResult });
+  renderResults();
+updateLivePreview(); // 👈 ADD here
+}
+
+    function calculateBackfill() {
+      const type = document.getElementById('backfillType').value;
+      const length = parseFloat(document.getElementById('backfillPipeLength').value) || 0;
+      const width = parseFloat(document.getElementById('backfillPipeWidth').value) || 0;
+      const depth = parseFloat(document.getElementById('backfillPipeDepth').value) || 0;
+      const cyd = parseFloat(((length * width * depth) / 27).toFixed(2));
+
+      const backfill = {};
+
+      if (type === 'All') {
+        backfill["Spoils Quantity (CYD)"] = cyd;
+        backfill["Class 2 Sand Quantity (CYD)"] = cyd;
+        backfill["Millings Quantity (CYD)"] = cyd;
+        backfill["21AA Quantity (CYD)"] = cyd;
+      } else {
+        backfill[type] = cyd;
+      }
+
+      results.push({"Backfill Quantities": backfill});
+      renderResults();
+updateLivePreview(); // 👈 ADD here
+    }
+function calculateSimpleRestoration() {
+  const type = document.getElementById('restorationType').value;
+  const material = document.getElementById('materialType').value;
+  const length = parseFloat(document.getElementById('resLength').value) || 0;
+  const breadth = parseFloat(document.getElementById('resBreadth').value) || 0;
+  const thicknessInches = parseFloat(document.getElementById('resThickness').value) || 0;
+  const thicknessFeet = thicknessInches / 12; // convert inches to feet
+
+  const key = `${material} - ${type}`;
+  let result = {};
+
+  if (material === 'Dowels') {
+    result["Dowels (pcs)"] = (length / 3) * 2;
+  } else {
+    const volume = parseFloat(((length * breadth * thicknessFeet) / 27).toFixed(2));
+    result[`${material} Volume (CYD)`] = volume;
+  }
+
+  results.push({[key]: result});
+  renderResults();
+
+updateLivePreview(); // 👈 ADD here
+}
+
+function updateLivePreview() {
+  const previewDiv = document.getElementById('livePreview');
+  previewDiv.innerHTML = '';
+
+  results.forEach(entry => {
+    for (let item in entry) {
+      if (item === "Other Materials" || item === "Backfill Quantities" || item === "Pressure Test & Chlorination") continue;
+
+      if (!item.includes("inch") && !item.includes("Hydrant") && !item.includes("Tee") && !item.includes("Bend") && !item.includes("Reducer") && !item.includes("Solid Sleeve") && !item.includes("Cap") && !item.includes("Plug") && !item.includes("Stand Pipe") && !item.includes("Omni") && !item.includes("Gate Valve")) {
+        continue; // skip irrelevant ones
+      }
+
+      const quantity = entry[item]["_quantity"] || 1;
+      const div = document.createElement('div');
+      div.style.marginBottom = '6px';
+      div.textContent = `${item}: ${quantity}`;
+      previewDiv.appendChild(div);
+    }
+  });
+}
+
+   
+function renderResults() {
+  const div = document.getElementById('summary');
+  div.innerHTML = '';
+  const itemCounts = {};
+  const aggregatedResults = {};
+
+  results.forEach(entry => {
+    for (let key in entry) {
+      if (!aggregatedResults[key]) aggregatedResults[key] = {};
+      for (let mat in entry[key]) {
+        if (mat === '_quantity') continue;
+        aggregatedResults[key][mat] = (aggregatedResults[key][mat] || 0) + entry[key][mat];
+      }
+      const totalQty = entry[key]['_quantity'] || 1;
+      itemCounts[key] = (itemCounts[key] || 0) + totalQty;
+    }
+  });
+
+  let count = 1;
+  for (let key in aggregatedResults) {
+    div.innerHTML += `<div class='entry-title'>${count++}. ${key} : ${itemCounts[key]}</div><ul>`;
+
+    for (let mat in aggregatedResults[key]) {
+      const value = aggregatedResults[key][mat];
+      let unit = 'pcs';
+      const matLower = mat.toLowerCase().trim();
+
+      // ✅ Exact phrases
+      if (matLower === "estimated volume of water (gal)") {
+        unit = 'gal';
+      } else if (matLower === "required chlorine (at 50 mg/l) (lbs)") {
+        unit = 'lbs';
+      } else if (matLower === "allowable leakage (gal/hr)") {
+        unit = 'gal/hr';
+      }
+
+      // ✅ Pipe-based logic
+      else if (matLower.includes("copper pipe")) {
+        unit = 'ft';
+      } else if (matLower.includes("polywrap")) {
+        unit = 'ft';
+      } else if (matLower.includes("inch pipe") || /\d+\s?inch\s?pipe/.test(matLower)) {
+        unit = 'ft';
+      } else if (matLower.includes(" pipe") && !matLower.includes("box")) {
+        unit = 'ft';
+      }
+else if (matLower.includes("wax tape")) {
+  unit = 'ft';
+}
+else if (matLower.includes("concrete mix")) {
+  unit = 'bags';
+} else if (matLower.includes("sold brick")) {
+  unit = 'pcs';
+} else if (matLower.includes("enlarged base")) {
+  unit = 'pcs';
+}
+
+      // ✅ Liquids
+      else if (matLower.includes("lubricant")) {
+        unit = 'gal';
+      } else if (matLower.includes("chlorine")) {
+        unit = 'lbs';
+      } else if (matLower.includes("water") && matLower.includes("volume")) {
+        unit = 'gal';
+      } else if (matLower.includes("leakage")) {
+        unit = 'gal/hr';
+      }
+
+      // ✅ Volumes
+      else if (matLower.includes("volume") || matLower.includes("quantity (cyd)")) {
+        unit = 'CYD';
+      }
+
+      // ✅ Countable items
+      else if (
+        matLower.includes("dowels") ||
+        matLower.includes("wedges") ||
+        matLower.includes("thrust block") ||
+        matLower.includes("gasket") ||
+        matLower.includes("megalug") ||
+        matLower.includes("t bolts") ||
+        matLower.includes("coupling") ||
+        matLower.includes("box") ||
+        matLower.includes("cover") ||
+        matLower.includes("stop") ||
+        matLower.includes("saddle") ||
+        matLower.includes("hydrant") ||
+        matLower.includes("Hydrant extension 6-inch") ||
+        matLower.includes("valve")
+      ) {
+        unit = 'pcs';
+      }
+
+      div.innerHTML += `<li>${mat}: ${value} ${unit}</li>`;
+    }
+
+    div.innerHTML += '</ul>';
+renderPriceInputs(); // 👈 Add this line at the end
+  }
+}
+function renderPriceInputs() {
+  const container = document.getElementById('priceInputs');
+  container.innerHTML = '';
+
+  const materialSet = new Set();
+  results.forEach(entry => {
+    for (let key in entry) {
+      for (let mat in entry[key]) {
+        if (mat !== '_quantity') materialSet.add(mat);
+      }
+    }
+  });
+
+  const saved = JSON.parse(localStorage.getItem('wmPrices') || '{}');
+
+  [...materialSet].forEach(mat => {
+    const label = document.createElement('label');
+    label.textContent = `${mat} (unit price):`;
+
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.min = '0';
+    input.step = '0.01';
+    input.placeholder = 'Enter price';
+    input.dataset.material = mat;
+    if (saved[mat]) input.value = saved[mat];
+
+    container.appendChild(label);
+    container.appendChild(input);
+  });
+}
+function calculatePricing() {
+  const inputs = document.querySelectorAll('#priceInputs input');
+  const priceMap = {};
+  inputs.forEach(input => {
+    const mat = input.dataset.material;
+    const price = parseFloat(input.value) || 0;
+    priceMap[mat] = price;
+  });
+
+  localStorage.setItem('wmPrices', JSON.stringify(priceMap));
+
+  const totals = {};
+  let grandTotal = 0;
+
+  results.forEach(entry => {
+    for (let key in entry) {
+      for (let mat in entry[key]) {
+        if (mat === '_quantity') continue;
+        const qty = entry[key][mat];
+        const price = priceMap[mat] || 0;
+        const total = qty * price;
+        totals[mat] = (totals[mat] || 0) + total;
+        grandTotal += total;
+      }
+    }
+  });
+
+  const taxPercent = parseFloat(document.getElementById("taxPercentage").value) || 0;
+  const taxAmount = (grandTotal * taxPercent) / 100;
+  const totalWithTax = grandTotal + taxAmount;
+
+  const display = document.getElementById('pricingResults');
+  display.innerHTML = '<h3>Total Costs:</h3><ul>';
+  for (let mat in totals) {
+    display.innerHTML += `<li>${mat}: $${totals[mat].toFixed(2)}</li>`;
+  }
+
+  display.innerHTML += `</ul>
+    <strong>Subtotal: $${grandTotal.toFixed(2)}</strong><br>
+    <strong>Tax (${taxPercent}%): $${taxAmount.toFixed(2)}</strong><br>
+    <strong>Grand Total with Tax: $${totalWithTax.toFixed(2)}</strong>`;
+
+}
+
+
+
+
+function filterWMByCategory() {
+  const category = document.getElementById('wmCategory').value;
+  const wmSelect = document.getElementById('wmItem');
+  wmSelect.innerHTML = '<option value="">-- Select WM Item --</option>';
+
+  if (category && wmCategories[category]) {
+    wmCategories[category].forEach(item => {
+      const opt = document.createElement('option');
+      opt.value = item;
+      opt.textContent = item;
+      wmSelect.appendChild(opt);
+    });
+  }
+}
+
+function filterFittingsByCategory() {
+  const category = document.getElementById('fittingCategory').value;
+  const fittingSelect = document.getElementById('fittingItem');
+  fittingSelect.innerHTML = '<option value="">-- Select a fitting --</option>';
+
+  if (category && fittingCategories[category]) {
+    fittingCategories[category].forEach(item => {
+      let formattedItem = item;
+
+      // Handle Caps, Plugs, Stand Pipe custom naming
+      if (category === "Caps") {
+        formattedItem = `Cap - ${item}`;
+      } else if (category === "Plugs") {
+        formattedItem = `Plug - ${item}`;
+      } else if (category === "Stand Pipe") {
+        formattedItem = `Stand Pipe - ${item}`;
+      }
+
+      const opt = document.createElement('option');
+      opt.value = formattedItem;
+      opt.textContent = formattedItem;
+      fittingSelect.appendChild(opt);
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  populateDropdown('wmItem', database);
+  populateDropdown('fittingItem', fittings);
+});
+// Paste this inside your <script> tag and replace your existing downloadExcel function
+function downloadExcel() {
+  const projectName = document.getElementById("projectName").value || "N/A";
+  const estimator = document.getElementById("estimatorName").value || "N/A";
+  const estimateDate = document.getElementById("estimateDate").value || "N/A";
+
+  const summaryContent = [];
+  const abstractMap = {};
+
+  // ===== Build Summary and Abstract =====
+  results.forEach(entry => {
+    for (let key in entry) {
+      const materials = entry[key];
+
+      for (let mat in materials) {
+        if (mat !== '_quantity') {
+          summaryContent.push([key, mat, getUnit(mat), materials[mat]]);
+        }
+      }
+
+    if (!abstractMap[key]) {
+  abstractMap[key] = 0;
+}
+if (entry[key]['_quantity']) {
+  abstractMap[key] += entry[key]['_quantity'];
+} else {
+  abstractMap[key] += 1;
+}
+    }
+  });
+
+  const fullSummary = [
+    ["🔷 Item-Wise Material Summary"],
+    ["Item", "Material", "Unit", "Quantity"],
+    ...summaryContent,
+    [],
+    ["🔷 Main Items Abstract (Item Types Summary)"],
+    ["S.No", "Item Type", "No. of Entries"]
+  ];
+
+  let serial = 1;
+  for (let key in abstractMap) {
+    fullSummary.push([serial++, key, abstractMap[key]]);
+  }
+
+  const summarySheet = XLSX.utils.aoa_to_sheet(fullSummary);
+
+  // ===== Build Estimate Details Sheet =====
+  const priceInputs = document.querySelectorAll('#priceInputs input');
+  const priceMap = {};
+  priceInputs.forEach(input => {
+    const mat = input.dataset.material;
+    priceMap[mat] = parseFloat(input.value) || 0;
+  });
+
+  const detailHeader = ["Item", "Material", "Unit", "Quantity", "Unit Price", "Total Price"];
+  const detailContent = [];
+
+  results.forEach(entry => {
+    for (let key in entry) {
+      const materials = entry[key];
+      for (let mat in materials) {
+        if (mat === '_quantity') continue;
+        const qty = materials[mat];
+        const unit = getUnit(mat);
+        const unitPrice = priceMap[mat] || 0;
+        const total = qty * unitPrice;
+
+        detailContent.push([
+          key,
+          mat,
+          unit,
+          qty,
+          unitPrice ? `$${unitPrice.toFixed(2)}` : "",
+          unitPrice ? `$${total.toFixed(2)}` : ""
+        ]);
+      }
+    }
+  });
+
+  const detailData = [
+    ["Project Name", projectName],
+    ["Estimator", estimator],
+    ["Estimate Date", estimateDate],
+    [],
+    detailHeader,
+    ...detailContent
+  ];
+
+  const detailSheet = XLSX.utils.aoa_to_sheet(detailData);
+
+  // ===== Export Excel with 2 sheets =====
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, summarySheet, "Summary Overview");
+  XLSX.utils.book_append_sheet(wb, detailSheet, "Estimate Details");
+  XLSX.writeFile(wb, "WM_Estimate_With_Abstract.xlsx");
+}
+
+ 
+
+    function clearAll() {
+  results.length = 0;
+  document.getElementById('summary').innerHTML = '';
+
+  // Clear WM section
+  document.getElementById('wmCategory').value = '';
+  document.getElementById('wmItem').innerHTML = '<option value="">-- Select WM Item --</option>';
+  document.getElementById('wmQty').value = '';
+
+  // Clear Fittings
+  document.getElementById('fittingCategory').value = '';
+  document.getElementById('fittingItem').innerHTML = '<option value="">-- Select a fitting --</option>';
+  document.getElementById('fittingQty').value = '';
+
+  // Clear Service
+  document.getElementById('serviceItem').value = '';
+  document.getElementById('serviceQty').value = '';
+  document.getElementById('pipeLength').value = '';
+
+  // Clear Backfill
+  document.getElementById('backfillType').value = '';
+  document.getElementById('backfillPipeLength').value = '';
+  document.getElementById('backfillPipeWidth').value = '';
+  document.getElementById('backfillPipeDepth').value = '';
+
+  // Clear Restoration
+  document.getElementById('restorationType').value = '';
+  document.getElementById('materialType').value = '';
+  document.getElementById('resLength').value = '';
+  document.getElementById('resBreadth').value = '';
+  document.getElementById('resThickness').value = '';
+
+  // Clear Project Info
+  document.getElementById('projectName').value = '';
+  document.getElementById('estimatorName').value = '';
+  document.getElementById('estimateDate').value = '';
+// ✅ Clear the live preview
+  document.getElementById('livePreview').innerHTML = '';
+}
+
+    // Initialize dropdowns once DOM is fully ready
+    document.addEventListener('DOMContentLoaded', function () {
+      populateDropdown('wmItem', database);
+      populateDropdown('fittingItem', fittings);
+    });
+  </script>
+<div class="section">
+  <h2>💵 Pricing Summary</h2>
+  <div id="priceInputs"></div>
+<label for="taxPercentage">Tax Percentage (%)</label>
+<input type="number" id="taxPercentage" placeholder="e.g. 6" min="0" step="0.01" />
+  <button onclick="calculatePricing()">Calculate Total Price</button>
+  <button onclick="clearPrices()">Clear Prices</button>
+  <div id="pricingResults" style="margin-top: 20px;"></div>
+</div>
+<h2 style="font-size: 28px; font-weight: bold; margin-top: 60px; border-bottom: 3px solid #555;">🛠️ Other Estimates</h2>
+<div style="text-align: right; margin-top: 10px; margin-bottom: 20px;">
+  <button onclick="downloadOtherEstimatesExcel()" style="background-color: #28a745; color: white; font-size: 16px; font-weight: bold; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;">
+    ⬇️ Download Other Estimates (Excel)
+  </button>
+</div>
+<!-- Manpower Estimation Section -->
+<h2>1️⃣ 👷 Manpower Estimate</h2>
+
+<!-- Team Design -->
+<div style="background-color: #ffffff;
+    border: 6px solid green;
+    padding: 30px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);">
+  <h3>Create Crew Team</h3>
+  <label>Team Name:</label>
+  <input type="text" id="teamName">
+  <br><br>
+  <label>Designation:</label>
+  <input type="text" id="crewDesignation">
+  <label>Hourly Wage ($):</label>
+  <input type="number" id="hourlyWage">
+  <button onclick="addToTeam()">Add to Team</button>
+  <br><br>
+  <button onclick="saveTeam()" style="background-color: green; color: white;">Save Team</button>
+  <div id="teamPreview" style="margin-top: 10px;"></div>
+</div>
+
+
+<!-- Work Assignment -->
+<div style="background-color: #ffffff;
+    border: 6px solid green;
+    padding: 30px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);">
+  <h3>Assign Work to Crew</h3>
+  <label>Work Description:</label>
+  <input type="text" id="workDesc">
+  <label>No. of Days:</label>
+  <input type="number" id="workDays">
+  <label>Select Team:</label>
+  <select id="teamSelect"></select>
+  <button onclick="assignWork()">Assign Work</button>
+  <br><br>
+  <table border="1" id="manpowerSummary" style="width:100%; font-family: Arial; text-align: center;">
+    <tr>
+      <th>S.No</th>
+      <th>Work Description</th>
+      <th>Days</th>
+      <th>Team</th>
+      <th>Total Cost ($)</th>
+    </tr>
+  </table>
+</div>
+<!-- Equipment Estimation Section -->
+<h2 style="margin-top: 50px;">2️⃣ 🚧 Equipment Estimation</h2>
+
+<!-- Equipment Set Design -->
+<div style="background-color: #ffffff;
+    border: 6px solid green;
+    padding: 30px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);">
+  <h3>Create Equipment Set</h3>
+  <label>Set Name:</label>
+  <input type="text" id="equipmentSetName">
+  <br><br>
+  <label>Equipment Name:</label>
+  <input type="text" id="equipmentName">
+  <label>Cost per Day ($):</label>
+  <input type="number" id="equipmentCost">
+  <button onclick="addEquipmentToSet()">Add to Set</button>
+  <br><br>
+  <button onclick="saveEquipmentSet()" style="background-color: green; color: white;">Save Equipment Set</button>
+  <div id="equipmentPreview" style="margin-top: 10px;"></div>
+</div>
+
+<!-- Equipment Assignment -->
+<div style="background-color: #ffffff;
+    border: 6px solid green;
+    padding: 30px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);">
+<!-- ============================= -->
+<!-- 🛠️ OTHER ESTIMATES SECTION -->
+<!-- ============================= -->
+
+
+
+
+
+
+  <h3>Assign Equipment to Work</h3>
+  <label>Work Description:</label>
+<select id="equipWorkDescSelect" onchange="handleEquipWorkChange()"></select>
+<input type="text" id="equipWorkDescManual" placeholder="Enter new work description" style="display:none; margin-left: 10px;"/>
+
+<label>No. of Days:</label>
+<select id="equipWorkDaysSelect" onchange="handleEquipDaysChange()"></select>
+<input type="number" id="equipWorkDaysManual" placeholder="Enter days" style="display:none; margin-left: 10px;"/>
+  <label>Select Equipment Set:</label>
+  <select id="equipmentSetSelect"></select>
+  <button onclick="assignEquipment()">Assign Equipment</button>
+  <br><br>
+  <table border="1" id="equipmentSummary" style="width:100%; font-family: Arial; text-align: center;">
+    <tr>
+      <th>S.No</th>
+      <th>Work Description</th>
+      <th>Days</th>
+      <th>Equipment Set</th>
+      <th>Total Cost ($)</th>
+    </tr>
+  </table>
+</div>
+<div class="section">
+  <h2>3️⃣ 💵 Service Pricing Estimate</h2>
+
+  <label for="servicePriceType">Service Type</label>
+  <select id="servicePriceType">
+    <option value="">-- Select --</option>
+    <option value="1 inch Service - Long Side">1 inch Service - Long Side</option>
+    <option value="1 inch Service - Short Side">1 inch Service - Short Side</option>
+    <option value="2 inch Service - Long Side">2 inch Service - Long Side</option>
+    <option value="2 inch Service - Short Side">2 inch Service - Short Side</option>
+  </select>
+
+  <label for="servicePriceQty">Quantity</label>
+  <input type="number" id="servicePriceQty" placeholder="Enter quantity" min="1">
+
+  <label for="serviceUnitPrice">Unit Price ($)</label>
+  <input type="number" id="serviceUnitPrice" placeholder="Enter price per service" min="0.01" step="0.01">
+
+  <button onclick="addServiceEstimate()">Add Service Estimate</button>
+  <button onclick="clearServiceEstimateInputs()">Clear</button>
+
+  <table border="1" id="serviceEstimateTable" style="width:100%; font-family: Arial; text-align: center; margin-top: 20px;">
+  <tr>
+    <th>S.No</th>
+    <th>Service Type</th>
+    <th>Quantity</th>
+    <th>Unit Price ($)</th>
+    <th>Total Price ($)</th>
+  </tr>
+</table>
+</div>
+<div class="section">
+  <h2>4️⃣ 🤝 Subcontractor Estimate</h2>
+
+  <label for="subWorkType">Work Type</label>
+  <select id="subWorkType">
+    <option value="">-- Select --</option>
+    <option value="Restoration">Restoration</option>
+    <option value="Other">Other</option>
+  </select>
+
+  <label for="subWorkDesc">Work Description</label>
+  <input type="text" id="subWorkDesc" placeholder="e.g., 1 inch Service Transfer">
+
+  <label for="subQty">Quantity</label>
+  <input type="number" id="subQty" placeholder="Enter quantity" min="1">
+
+  <label for="subUnit">Unit</label>
+  <select id="subUnit">
+    <option value="SFT">SFT</option>
+    <option value="CYD">CYD</option>
+    <option value="LFT">LFT</option>
+    <option value="EA">EA</option>
+    <option value="TONS">TONS</option>
+    <option value="OTHER">OTHER</option>
+  </select>
+
+  <label for="subUnitPrice">Unit Price ($)</label>
+  <input type="number" id="subUnitPrice" placeholder="Enter price per unit" min="0.01" step="0.01">
+
+  <button onclick="addSubcontractorWork()">Add Subcontractor Work</button>
+  <button onclick="clearSubcontractorInputs()">Clear</button>
+
+  <table border="1" id="subcontractorEstimateTable" style="width:100%; font-family: Arial; text-align: center; margin-top: 20px;">
+    <tr>
+      <th>S.No</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Quantity</th>
+      <th>Unit</th>
+      <th>Unit Price ($)</th>
+      <th>Total Price ($)</th>
+    </tr>
+  </table>
+</div>
+
+
+</body>
+</div>
+</html>
+
