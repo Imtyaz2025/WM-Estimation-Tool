@@ -232,7 +232,7 @@ ul {
   <input type="number" id="serviceQty" placeholder="Enter quantity">
 
   <!-- 👇 Paste this new line here -->
-  <label for="pipeLength">Pipe Length per Service (ft)</label>
+  <label for="pipeLength">Pipe Length per Service (Lft)</label>
   <input type="number" id="pipeLength" placeholder="Enter copper pipe length per service">
 
   <button onclick="addService()">Add Service</button>
@@ -249,12 +249,12 @@ ul {
       <option value="Millings Quantity (CYD)">Millings Quantity (CYD)</option>
       <option value="21AA Quantity (CYD)">21AA Quantity (CYD)</option>
     </select>
-    <label for="backfillPipeLength">Pipe Length (ft)</label>
-    <input type="number" id="backfillPipeLength" placeholder="Enter pipe length (ft)">
-    <label for="backfillPipeWidth">Trench Width (ft)</label>
-    <input type="number" id="backfillPipeWidth" placeholder="Enter trench width (ft)">
-    <label for="backfillPipeDepth">Trench Depth (ft)</label>
-    <input type="number" id="backfillPipeDepth" placeholder="Enter trench depth (ft)">
+    <label for="backfillPipeLength">Pipe Length (Lft)</label>
+    <input type="number" id="backfillPipeLength" placeholder="Enter pipe length (Lft)">
+    <label for="backfillPipeWidth">Trench Width (Lft)</label>
+    <input type="number" id="backfillPipeWidth" placeholder="Enter trench width (Lft)">
+    <label for="backfillPipeDepth">Trench Depth (Lft)</label>
+    <input type="number" id="backfillPipeDepth" placeholder="Enter trench depth (Lft)">
     <button onclick="calculateBackfill()">Calculate Backfill Quantities</button>
 <button onclick="clearBackfillInputs()">Clear</button>
   </div>
@@ -291,11 +291,11 @@ ul {
     <option value="Other">Other</option>
   </select>
 
-  <label for="resLength">Length (ft)</label>
-  <input type="number" id="resLength" placeholder="Enter length (ft)">
+  <label for="resLength">Length (Lft)</label>
+  <input type="number" id="resLength" placeholder="Enter length (Lft)">
   
-  <label for="resBreadth">Breadth (ft) <small>(Not needed for Dowels)</small></label>
-  <input type="number" id="resBreadth" placeholder="Enter breadth (ft)">
+  <label for="resBreadth">Breadth (Lft) <small>(Not needed for Dowels)</small></label>
+  <input type="number" id="resBreadth" placeholder="Enter breadth (Lft)">
 
   <label for="resThickness">Thickness (inches) <small>(Not needed for Dowels)</small></label>
   <input type="number" id="resThickness" placeholder="Enter thickness (inches)">
@@ -755,7 +755,7 @@ function clearSubcontractorInputs() {
   document.getElementById('subWorkType').value = '';
   document.getElementById('subWorkDesc').value = '';
   document.getElementById('subQty').value = '';
-  document.getElementById('subUnit').value = 'SFT';
+  document.getElementById('subUnit').value = 'SLft';
   document.getElementById('subUnitPrice').value = '';
 }
 function downloadOtherEstimatesExcel() {
@@ -826,13 +826,13 @@ function downloadOtherEstimatesExcel() {
 }
 function getUnit(mat) {
   const matLower = mat.toLowerCase();
-  if (matLower.includes("pipe") && !matLower.includes("box")) return "ft";
+  if (matLower.includes("pipe") && !matLower.includes("box")) return "Lft";
   if (matLower.includes("volume")) return "CYD";
-  if (matLower.includes("wax tape")) return "ft";
+  if (matLower.includes("wax tape")) return "Lft";
   if (matLower.includes("lubricant")) return "gal";
   if (matLower.includes("chlorine")) return "lbs";
-  if (matLower.includes("gasket") || matLower.includes("megalug") || matLower.includes("hydrant") || matLower.includes("valve") || matLower.includes("box")) return "pcs";
-  return "pcs"; // default
+  if (matLower.includes("gasket") || matLower.includes("megalug") || matLower.includes("hydrant") || matLower.includes("valve") || matLower.includes("box")) return "Ea";
+  return "Ea"; // default
 }
 
 
@@ -1218,11 +1218,11 @@ function addItem(type) {
 
   // ✅ Add Wax Tape:
   if (item.toLowerCase().includes("gate valve")) {
-    entry[item]["Wax Tape"] = 10 * qty; // 10 LFT per valve
+    entry[item]["Wax Tape"] = 10 * qty; // 10 LLft per valve
   }
 
   if (item.toLowerCase().includes("fire hydrant")) {
-    entry[item]["Wax Tape"] = 15 * qty; // 15 LFT per hydrant
+    entry[item]["Wax Tape"] = 15 * qty; // 15 LLft per hydrant
   }
 
   entry[item]['_quantity'] = qty;
@@ -1244,7 +1244,7 @@ function addService() {
   entry[item] = {};
 
   // ✅ Service Line Materials
-  entry[item]["1 inch Copper Pipe (ft)"] = qty * copperLength;
+  entry[item]["1 inch Copper Pipe (Lft)"] = qty * copperLength;
   entry[item]["Wax Tape"] = qty * 3;
   entry[item]["Ready To Use Concrete Mix"] = qty;
   entry[item]["Sold Bricks"] = qty * 3;
@@ -1325,7 +1325,7 @@ function calculateOthers() {
   // === Pipe Joint Lubricant ===
   let pipeJoints = 0;
   for (let size in pipeLengths) {
-  const lengthFt = pipeLengths[size];
+  const lengthLft = pipeLengths[size];
 
   // Check if any DI pipe of this size exists
   let isDI = false;
@@ -1337,8 +1337,8 @@ function calculateOthers() {
     }
   });
 
-  if (isDI && lengthFt > 0) {
-    const jointCount = Math.floor(lengthFt / 20);
+  if (isDI && lengthLft > 0) {
+    const jointCount = Math.floor(lengthLft / 20);
     pipeJoints += jointCount * 2;  // 2 oz per joint
   }
 }
@@ -1354,7 +1354,7 @@ function calculateOthers() {
   const other = {};
   other["Thrust Blocks"] = thrustBlocks;
   other["Pipe Joint Wedges"] = thrustBlocks * 2;
-  other["Polywrap (ft)"] = polyLength;
+  other["Polywrap (Lft)"] = polyLength;
   other["Pipe Lubricant (gal)"] = parseFloat(totalGallons.toFixed(2));
 
   results.push({ "Other Materials": other });
@@ -1409,11 +1409,11 @@ results.forEach(entry => {
   let totalVolumeGallons = 0;
   for (let size in pipeLengths) {
     const diaInches = pipeSizes[size];
-    const lengthFt = pipeLengths[size];
-    if (lengthFt > 0) {
-      const radiusFt = (diaInches / 12) / 2;
-      const volumeFt3 = Math.PI * Math.pow(radiusFt, 2) * lengthFt;
-      totalVolumeGallons += volumeFt3 * 7.48052;
+    const lengthLft = pipeLengths[size];
+    if (lengthLft > 0) {
+      const radiusLft = (diaInches / 12) / 2;
+      const volumeLft3 = Math.PI * Math.pow(radiusLft, 2) * lengthLft;
+      totalVolumeGallons += volumeLft3 * 7.48052;
     }
   }
 
@@ -1421,11 +1421,11 @@ results.forEach(entry => {
   const chlorineLbs = (totalVolumeGallons * 50 / 1_000_000) * 8.34;
 
   // === AWWA Allowable Leakage Calculation ===
-  const totalLengthFt = Object.values(pipeLengths).reduce((a, b) => a + b, 0);
+  const totalLengthLft = Object.values(pipeLengths).reduce((a, b) => a + b, 0);
   const weightedDiameter = Object.entries(pipeLengths)
-    .reduce((sum, [size, len]) => sum + (pipeSizes[size] * len), 0) / (totalLengthFt || 1);
+    .reduce((sum, [size, len]) => sum + (pipeSizes[size] * len), 0) / (totalLengthLft || 1);
   const testPressurePsi = 150;
-  const allowableLeakage = (totalLengthFt * weightedDiameter * Math.sqrt(testPressurePsi)) / 148000;
+  const allowableLeakage = (totalLengthLft * weightedDiameter * Math.sqrt(testPressurePsi)) / 148000;
 
   const chlorinationResult = {
     "Estimated Volume of Water (gal)": parseFloat(totalVolumeGallons.toFixed(2)),
@@ -1480,7 +1480,7 @@ function calculateSimpleRestoration() {
   let result = {};
 
   if (material === 'Dowels') {
-    result["Dowels (pcs)"] = (length / 3) * 2;
+    result["Dowels (Ea)"] = (length / 3) * 2;
   } else {
     const volume = parseFloat(((length * breadth * thicknessFeet) / 27).toFixed(2));
     result[`${material} Volume (CYD)`] = volume;
@@ -1538,7 +1538,7 @@ function renderResults() {
 
     for (let mat in aggregatedResults[key]) {
       const value = aggregatedResults[key][mat];
-      let unit = 'pcs';
+      let unit = 'Ea';
       const matLower = mat.toLowerCase().trim();
 
       // ✅ Exact phrases
@@ -1552,23 +1552,23 @@ function renderResults() {
 
       // ✅ Pipe-based logic
       else if (matLower.includes("copper pipe")) {
-        unit = 'ft';
+        unit = 'Lft';
       } else if (matLower.includes("polywrap")) {
-        unit = 'ft';
+        unit = 'Lft';
       } else if (matLower.includes("inch pipe") || /\d+\s?inch\s?pipe/.test(matLower)) {
-        unit = 'ft';
+        unit = 'Lft';
       } else if (matLower.includes(" pipe") && !matLower.includes("box")) {
-        unit = 'ft';
+        unit = 'Lft';
       }
 else if (matLower.includes("wax tape")) {
-  unit = 'ft';
+  unit = 'Lft';
 }
 else if (matLower.includes("concrete mix")) {
   unit = 'bags';
 } else if (matLower.includes("sold brick")) {
-  unit = 'pcs';
+  unit = 'Ea';
 } else if (matLower.includes("enlarged base")) {
-  unit = 'pcs';
+  unit = 'Ea';
 }
 
       // ✅ Liquids
@@ -1604,7 +1604,7 @@ else if (matLower.includes("concrete mix")) {
         matLower.includes("Hydrant extension 6-inch") ||
         matLower.includes("valve")
       ) {
-        unit = 'pcs';
+        unit = 'Ea';
       }
 
       div.innerHTML += `<li>${mat}: ${value} ${unit}</li>`;
@@ -2098,9 +2098,9 @@ if (entry[key]['_quantity']) {
 
   <label for="subUnit">Unit</label>
   <select id="subUnit">
-    <option value="SFT">SFT</option>
+    <option value="SLft">SLft</option>
     <option value="CYD">CYD</option>
-    <option value="LFT">LFT</option>
+    <option value="LLft">LLft</option>
     <option value="EA">EA</option>
     <option value="TONS">TONS</option>
     <option value="OTHER">OTHER</option>
