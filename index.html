@@ -1697,6 +1697,21 @@ function calculatePricing() {
     <strong>Grand Total with Tax: $${totalWithTax.toFixed(2)}</strong>`;
 
 }
+function clearPrices() {
+  const inputs = document.querySelectorAll('#priceInputs input');
+  inputs.forEach(input => {
+    input.value = '';
+  });
+
+  // Clear saved prices from localStorage
+  localStorage.removeItem('wmPrices');
+
+  // Also clear pricing results display
+  document.getElementById('pricingResults').innerHTML = '';
+
+  // Clear tax percentage
+  document.getElementById('taxPercentage').value = '';
+}
 
 
 
