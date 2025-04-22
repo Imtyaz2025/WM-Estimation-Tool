@@ -154,6 +154,11 @@ ul {
 </head>
 <body>
   <h1>WM Material Estimator Tool</h1>
+<div style="margin-bottom: 20px;">
+  <button onclick="saveToLocal()">💾 Save My Estimate</button>
+  <button onclick="loadFromLocal()">📂 Load My Estimate</button>
+  <button onclick="localStorage.removeItem('wmEstimatorData'); alert('Saved data cleared!');">🗑️ Clear Saved Data</button>
+</div>
 <div class="section">
   <h2>📋 Project Details</h2>
 
@@ -865,12 +870,7 @@ function loadFromLocal() {
   </div>
 
   <button onclick="downloadExcel()">Download Excel</button>
-  <button onclick="clearAll()">Clear All</button>
-<button onclick="saveToLocal()">💾 Save My Estimate</button>
-<button onclick="loadFromLocal()">📂 Load My Estimate</button>
-<button onclick="localStorage.removeItem('wmEstimatorData'); alert('Saved data cleared!');">
-🗑️ Clear Saved Data
-</button>
+  
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script>
