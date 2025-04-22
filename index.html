@@ -304,6 +304,8 @@ ul {
 <button onclick="clearRestorationInputs()">Clear</button>
 </div>
 <div class="section" style="position: fixed; right: 20px; top: 100px; width: 280px; background: #fff8dc; border: 2px solid ; padding: 16px; border-radius: 10px; box-shadow: 2px 2px 6px rgba(0,0,0,0.1); max-height: 80vh; overflow-y: auto;">
+
+
   <h2 style="font-size: 18px; color: black;">🧾 Your Selections</h2>
   <div id="livePreview"></div>
 </div>
@@ -1628,21 +1630,30 @@ function renderPriceInputs() {
   const saved = JSON.parse(localStorage.getItem('wmPrices') || '{}');
 
   [...materialSet].forEach(mat => {
-    const label = document.createElement('label');
-    label.textContent = `${mat} (unit price):`;
+    const unit = getUnit(mat);
+    const qty = results.reduce((sum, entry) => {
+      for (let key in entry) {
+        if (entry[key][mat]) {
+          sum += entry[key][mat];
+        }
+      }
+      return sum;
+    }, 0);
 
-    const input = document.createElement('input');
-    input.type = 'number';
-    input.min = '0';
-    input.step = '0.01';
-    input.placeholder = 'Enter price';
-    input.dataset.material = mat;
-    if (saved[mat]) input.value = saved[mat];
+    const row = document.createElement('tr');
 
-    container.appendChild(label);
-    container.appendChild(input);
+    row.innerHTML = `
+      <td style="text-align: left; padding: 6px;">${mat}</td>
+      <td>${unit}</td>
+      <td>${qty}</td>
+      <td><input type="number" data-material="${mat}" value="${saved[mat] || ''}" placeholder="0.00" step="0.01" style="width: 80px;" /></td>
+    `;
+
+    container.appendChild(row);
   });
 }
+
+
 function calculatePricing() {
   const inputs = document.querySelectorAll('#priceInputs input');
   const priceMap = {};
@@ -1883,12 +1894,26 @@ if (entry[key]['_quantity']) {
   </script>
 <div class="section">
   <h2>💵 Pricing Summary</h2>
-  <div id="priceInputs"></div>
+ <table border="1" style="width: 100%; font-family: Arial; text-align: center;" id="priceInputsTable">
+  <thead style="background-color: #f0f0f0;">
+    <tr>
+      <th>Material</th>
+      <th>Unit</th>
+      <th>Quantity</th>
+      <th>Unit Price ($)</th>
+    </tr>
+  </thead>
+  <tbody id="priceInputs"></tbody>
+</table>
+
+<br>
 <label for="taxPercentage">Tax Percentage (%)</label>
-<input type="number" id="taxPercentage" placeholder="e.g. 6" min="0" step="0.01" />
-  <button onclick="calculatePricing()">Calculate Total Price</button>
-  <button onclick="clearPrices()">Clear Prices</button>
-  <div id="pricingResults" style="margin-top: 20px;"></div>
+<input type="number" id="taxPercentage" placeholder="e.g. 6" min="0" step="0.01" style="margin-left: 10px;" />
+<br><br>
+<button onclick="calculatePricing()">Calculate Total Price</button>
+<button onclick="clearPrices()">Clear Prices</button>
+<div id="pricingResults" style="margin-top: 20px;"></div>
+
 </div>
 <h2 style="font-size: 28px; font-weight: bold; margin-top: 60px; border-bottom: 3px solid #555;">🛠️ Other Estimates</h2>
 <div style="text-align: right; margin-top: 10px; margin-bottom: 20px;">
