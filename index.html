@@ -153,6 +153,10 @@ ul {
 </style>
 </head>
 <body>
+<div style="text-align: center; margin-bottom: 20px;">
+  <img id="categoryImage" src="" alt="Category Preview" style="max-height: 300px; border: 2px solid #ccc; display: none; padding: 8px; border-radius: 10px;" />
+</div>
+
   <h1>WM Material Estimator Tool</h1>
 <div class="section">
   <h2>📋 Project Details</h2>
@@ -218,6 +222,7 @@ ul {
   <div class="section">
    <div class="section">
   <h2>3. 🚿 Service Transfers</h2>
+<script>showCategoryImage('Service');</script>
 
   <label for="serviceItem">Select Service Type</label>
   <select id="serviceItem">
@@ -240,7 +245,8 @@ ul {
 </div>
 
   <div class="section">
-    <h2>4. 🪨 Backfill Calculation</h2>
+    
+<script>showCategoryImage('Backfill');</script>
     <label for="backfillType">Select Backfill Material</label>
     <select id="backfillType">
       <option value="All">All (Spoils, Class 2 Sand, Millings, 21AA)</option>
@@ -262,10 +268,12 @@ ul {
 
   <div class="section">
     <h2>5. 🧱 Other Materials</h2>
+<script>showCategoryImage('Materials');</script>
     <button onclick="calculateOthers()">Calculate Thrust Blocks & Polywrap</button>
   </div>
 <div class="section">
   <h2>6. 🧪 Pressure Test & Chlorination</h2>
+<script>showCategoryImage('Pressure');</script>
 
   <label for="testPressure">Test Pressure (psi)</label>
   <input type="number" id="testPressure" placeholder="Enter test pressure (default 150)">
@@ -275,6 +283,7 @@ ul {
 
 <div class="section">
   <h2>7. 🛣️ Restoration Quantities</h2>
+<script>showCategoryImage('Restoration');</script>
   <label for="restorationType">Restoration Type</label>
   <select id="restorationType">
     <option value="Pavement Restoration">Pavement Restoration</option>
@@ -834,7 +843,21 @@ function getUnit(mat) {
   if (matLower.includes("gasket") || matLower.includes("megalug") || matLower.includes("hydrant") || matLower.includes("valve") || matLower.includes("box")) return "Ea";
   return "Ea"; // default
 }
+function showCategoryImage(category) {
+  const img = document.getElementById("categoryImage");
+  const fileName = category + ".jpg"; // e.g., Pipes.jpg
+  const path = "images/" + fileName;
 
+  const imageTest = new Image();
+  imageTest.onload = function () {
+    img.src = path;
+    img.style.display = "block";
+  };
+  imageTest.onerror = function () {
+    img.style.display = "none";
+  };
+  imageTest.src = path;
+}
 
 
 </script>
@@ -1718,6 +1741,7 @@ function clearPrices() {
 
 function filterWMByCategory() {
   const category = document.getElementById('wmCategory').value;
+showCategoryImage(category);
   const wmSelect = document.getElementById('wmItem');
   wmSelect.innerHTML = '<option value="">-- Select WM Item --</option>';
 
@@ -1733,6 +1757,7 @@ function filterWMByCategory() {
 
 function filterFittingsByCategory() {
   const category = document.getElementById('fittingCategory').value;
+showCategoryImage("Fittings");
   const fittingSelect = document.getElementById('fittingItem');
   fittingSelect.innerHTML = '<option value="">-- Select a fitting --</option>';
 
