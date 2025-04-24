@@ -153,9 +153,6 @@ ul {
 </style>
 </head>
 <body>
-<div style="text-align: center; margin-bottom: 20px;">
-  <img id="categoryImage" src="" alt="Category Image" style="max-height: 300px; display: none; border: 2px solid #ccc; padding: 8px; border-radius: 10px;" />
-</div>
   <h1>WM Material Estimator Tool</h1>
 <div class="section">
   <h2>📋 Project Details</h2>
@@ -174,8 +171,6 @@ ul {
 
   <div class="section">
     <h2>1. 🚰 WM Items</h2>
-<script>showFixedCategoryImage('Pipes.jpg');</script>
-
     <label for="wmCategory">WM Item Category</label>
 <select id="wmCategory" onchange="filterWMByCategory()">
   <option value="">-- Select Category --</option>
@@ -193,9 +188,7 @@ ul {
   </div>
 
   <div class="section">
-  <h2>3. 🚿 Service Transfers</h2>
-<script>showFixedCategoryImage('Service.jpg');</script>
-<script>showFixedCategoryImage('Fittings.jpg');</script>
+  <h2>2. 🔩 Fittings</h2>
 
   <label for="fittingCategory">Fitting Category</label>
   <select id="fittingCategory" onchange="filterFittingsByCategory()">
@@ -248,7 +241,6 @@ ul {
 
   <div class="section">
     <h2>4. 🪨 Backfill Calculation</h2>
-<script>showFixedCategoryImage('Backfill.jpg');</script>
     <label for="backfillType">Select Backfill Material</label>
     <select id="backfillType">
       <option value="All">All (Spoils, Class 2 Sand, Millings, 21AA)</option>
@@ -270,12 +262,10 @@ ul {
 
   <div class="section">
     <h2>5. 🧱 Other Materials</h2>
-<script>showFixedCategoryImage('Materials.jpg');</script>
     <button onclick="calculateOthers()">Calculate Thrust Blocks & Polywrap</button>
   </div>
 <div class="section">
   <h2>6. 🧪 Pressure Test & Chlorination</h2>
-<script>showFixedCategoryImage('Pressure.jpg');</script>
 
   <label for="testPressure">Test Pressure (psi)</label>
   <input type="number" id="testPressure" placeholder="Enter test pressure (default 150)">
@@ -285,7 +275,6 @@ ul {
 
 <div class="section">
   <h2>7. 🛣️ Restoration Quantities</h2>
-<script>showFixedCategoryImage('Restoration.jpg');</script>
   <label for="restorationType">Restoration Type</label>
   <select id="restorationType">
     <option value="Pavement Restoration">Pavement Restoration</option>
@@ -845,20 +834,7 @@ function getUnit(mat) {
   if (matLower.includes("gasket") || matLower.includes("megalug") || matLower.includes("hydrant") || matLower.includes("valve") || matLower.includes("box")) return "Ea";
   return "Ea"; // default
 }
-function showFixedCategoryImage(imageFileName) {
-  const img = document.getElementById("categoryImage");
-  const fullPath = "images/" + imageFileName;
 
-  const testImg = new Image();
-  testImg.onload = function () {
-    img.src = fullPath;
-    img.style.display = "block";
-  };
-  testImg.onerror = function () {
-    img.style.display = "none";
-  };
-  testImg.src = fullPath;
-}
 
 
 </script>
